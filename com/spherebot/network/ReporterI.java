@@ -1,4 +1,4 @@
-package Network;
+package com.spherebot.network;
 
 public interface ReporterI {
 	

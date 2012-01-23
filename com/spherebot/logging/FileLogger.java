@@ -13,8 +13,20 @@ public class FileLogger implements LoggerI{
 	
 	public FileLogger(String path) throws IOException
 	{
+		initFileLogger(path, ((Long)(new Date()).getTime()).toString());	
+		
+	}
+
+
+	public FileLogger(String path, String fname) throws IOException
+	{
+		initFileLogger(path, fname);
+	}
+	
+	private void initFileLogger(String path, String fname) throws IOException
+	{
 		long time = (new Date()).getTime();
-		f = new File(path + File.separator + time + ".txt");
+		f = new File(path + File.separator + fname + ".txt");
 		fw = new FileWriter(f);
 	}
 	

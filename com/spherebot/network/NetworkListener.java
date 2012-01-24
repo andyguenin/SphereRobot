@@ -9,16 +9,15 @@ package com.spherebot.network;
  */
 
 
-import com.spherebot.SBModule;
-import com.spherebot.logging.LogCollection;
-import com.spherebot.logging.LoggerI;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.spherebot.SBModule;
+import com.spherebot.logging.LogCollection;
 
 
 public class NetworkListener extends Thread implements SBModule {

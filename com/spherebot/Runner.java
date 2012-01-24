@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.spherebot.logging.*;
-import com.spherebot.network.NetworkListener;
-import com.spherebot.network.ReporterI;
+import com.spherebot.network.*;
 
 
 public class Runner {

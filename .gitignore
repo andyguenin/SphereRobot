@@ -4,4 +4,3 @@ bin/*
 .project
 *.txt
 *.class
-doc/*

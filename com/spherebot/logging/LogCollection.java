@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.spherebot.logging.LoggerI;
+
 /**
  * Collection of logs that allows you to perform operations on all logs at once
  * @author Andrew McAleer
@@ -45,9 +47,6 @@ public class LogCollection implements Collection<LoggerI>{
 		
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public void clear() {
 		logs.clear();

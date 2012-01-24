@@ -76,9 +76,13 @@ public class NetworkListener extends Thread implements SBModule {
 		{
 			try {
 					message = (String)in.readObject();
+					if(message.equals("error"))
+						throw new IOException("super big error");
+						
 					report(message);
 				} catch (ClassNotFoundException | IOException e) {
-					report("error: " + e.getMessage());
+					reportError(e.getMessage(), e.getStackTrace());
+					
 				}
 		}
 	}
@@ -93,11 +97,19 @@ public class NetworkListener extends Thread implements SBModule {
 			reportIt.next().report(message);
 		}
 		
-		Iterator<LoggerI> logIt = logs.iterator();
-		while(logIt.hasNext())
+		logs.logText(message);
+	}
+	
+	private void reportError(String message, StackTraceElement[] ste)
+	{
+		Iterator<ReporterI> reportIt = reports.iterator();
+		while(reportIt.hasNext())
 		{
-			logIt.next().logText(message);
+			reportIt.next().report(message);
 		}
+		
+		logs.logError(message);
+		logs.logStackTrace(ste);
 	}
 
 

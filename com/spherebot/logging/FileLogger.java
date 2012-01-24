@@ -6,28 +6,44 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Class that logs status updates, warning, and errors to a file
+ * @author Andy Guenin
+ * @version 01/24/2012
+ *
+ */
 public class FileLogger implements LoggerI{
 	
 	File f;
 	FileWriter fw;
 	
-	public FileLogger(String path) throws IOException
+	public FileLogger(String path)
 	{
 		initFileLogger(path, ((Long)(new Date()).getTime()).toString());	
 		
 	}
 
 
-	public FileLogger(String path, String fname) throws IOException
+	public FileLogger(String path, String fname)
 	{
 		initFileLogger(path, fname);
 	}
 	
-	private void initFileLogger(String path, String fname) throws IOException
+	private void initFileLogger(String path, String fname)
 	{
-		long time = (new Date()).getTime();
-		f = new File(path + File.separator + fname + ".txt");
-		fw = new FileWriter(f);
+		try
+		{
+			
+			(new File(path)).mkdirs();
+			f = new File(path + fname + ".txt");
+			//f.createNewFile();
+			fw = new FileWriter(f);
+			
+		}
+		catch(IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void write(String text, String preText)

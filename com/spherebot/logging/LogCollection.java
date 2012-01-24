@@ -1,122 +1,143 @@
 package com.spherebot.logging;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Collection of logs that allows you to perform operations on all logs at once
+ * @author Andrew McAleer
+ * @version 01/24/2012
+ */
 public class LogCollection implements Collection<LoggerI>{
 
-	ArrayList<LoggerI> log;
+	private ArrayList<LoggerI> logs;
 	
+	/**
+	 * Creates a new log collection
+	 */
 	public LogCollection()
 	{
-		log = new ArrayList<LoggerI>();
+		logs = new ArrayList<LoggerI>();
 	}
 	
-	@Override
-	public boolean add(LoggerI arg0) {
 	
-		return log.add(arg0);
+	/**
+	 * Adds a logger to the collection
+	 * @param log the log to add to the collection
+	 */
+	@Override
+	public boolean add(LoggerI log) {
+	
+		return logs.add(log);
 		
 	}
 
+	/**
+	 * Adds a collection of logs to this collection
+	 * @param logCollection the collection of logs to add
+	 */
 	@Override
-	public boolean addAll(Collection<? extends LoggerI> arg0) {
+	public boolean addAll(Collection<? extends LoggerI> logCollection) {
 		
-		return log.addAll(arg0);
+		return logs.addAll(logCollection);
 		
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void clear() {
-		log.clear();
+		logs.clear();
 		
 	}
 
 	@Override
 	public boolean contains(Object arg0) {
 		
-		return log.contains(arg0);
+		return logs.contains(arg0);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> arg0) {
 		
-		return log.containsAll(arg0);
+		return logs.containsAll(arg0);
 	}
 
 	@Override
 	public boolean isEmpty() {
 		
-		return log.isEmpty();
+		return logs.isEmpty();
 	}
 
 	@Override
 	public Iterator<LoggerI> iterator() {
 		
-		return log.iterator();
+		return logs.iterator();
 	}
 
 	@Override
 	public boolean remove(Object arg0) {
 		
-		return log.remove(arg0);
+		return logs.remove(arg0);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> arg0) {
 		
-		return log.removeAll(arg0);
+		return logs.removeAll(arg0);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> arg0) {
 		
-		return log.retainAll(arg0);
+		return logs.retainAll(arg0);
 	}
 
 	@Override
 	public int size() {
 		
-		return log.size();
+		return logs.size();
 	}
 
 	@Override
 	public Object[] toArray() {
 		
-		return log.toArray();
+		return logs.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] arg0) {
 		
-		return log.toArray(arg0);
+		return logs.toArray(arg0);
 	}
 	
 	public void logText(String message)
 	{
-		Iterator<LoggerI> it = log.iterator();
+		Iterator<LoggerI> it = logs.iterator();
 		while(it.hasNext())
 			it.next().logText(message);
 	}
 	
 	public void logWarning(String message)
 	{
-		Iterator<LoggerI> it = log.iterator();
+		Iterator<LoggerI> it = logs.iterator();
 		while(it.hasNext())
 			it.next().logWarning(message);
 	}
 	
 	public void logError(String message)
 	{
-		Iterator<LoggerI> it = log.iterator();
+		Iterator<LoggerI> it = logs.iterator();
 		while(it.hasNext())
 			it.next().logError(message);
 	}
 	
 	public void logStackTrace(StackTraceElement[] element)
 	{
-		Iterator<LoggerI> it = log.iterator();
+		Iterator<LoggerI> it = logs.iterator();
 		while(it.hasNext())
 			it.next().logStackTrace(element);
 	}

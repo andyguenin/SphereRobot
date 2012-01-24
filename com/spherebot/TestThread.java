@@ -41,6 +41,10 @@ public class TestThread extends Thread{
 			do{
 				if(c == 2)
 				{
+					m = "error";
+				}
+				if(c == 3)
+				{
 					m = "quit";
 				}
 				sendMessage(m);

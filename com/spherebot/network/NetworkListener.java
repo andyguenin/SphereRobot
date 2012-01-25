@@ -5,7 +5,7 @@ package com.spherebot.network;
 /**
  * Creates a script that listens for network connections and then reports on various commands
  * @author Andy Guenin
- *
+ * @version 01/24/2012
  */
 
 
@@ -42,7 +42,7 @@ public class NetworkListener extends Thread implements SBModule {
 	
 	/**
 	 * Adds a Reporter 
-	 * @param r
+	 * @param r the reporter to add
 	 */
 	public void addReporter(ReporterI r)
 	{
@@ -52,32 +52,41 @@ public class NetworkListener extends Thread implements SBModule {
 		}
 	}
 	
-	
+	/**
+	 * This should contain the code that is executed when the thread is to be run.
+	 * NOTE: Call NetworkListener.start(), NOT this method
+	 */
 	public void run()
 	{
 		Socket connection;
 		ObjectInputStream in;
+		
+		// Tries to listen to new connections on the port specified in the constructor
 		try
 		{
 			ss = new ServerSocket(port, NUM_CONNECTIONS);
+			// The port has successfully been opened
 			report("SphereServer running");
+			
 			connection = ss.accept();
+			// A remote client has successfully connected on this port
 			report("SphereServer received an incoming connection from: " + connection.getInetAddress().getHostAddress());
 			in = new ObjectInputStream(connection.getInputStream());
 		}
 		catch(IOException e)
 		{
-			report("error: " + e.getMessage());
+			reportError(e.getMessage(), e.getStackTrace());
+			
+			// If the flow of execution reaches this point, there is no way to control the robot, and therefore the program
+			// must stop.
 			return;
 		}
 		String message = "";
 		while(!message.equals("quit"))
 		{
 			try {
+					// Listens for a message to be sent
 					message = (String)in.readObject();
-					if(message.equals("error"))
-						throw new IOException("super big error");
-						
 					report(message);
 				} catch (ClassNotFoundException | IOException e) {
 					reportError(e.getMessage(), e.getStackTrace());
@@ -87,7 +96,10 @@ public class NetworkListener extends Thread implements SBModule {
 	}
 	
 	
-	
+	/**
+	 * Sends a report to all ReporterI and LoggerI.
+	 * @param message the message to report.
+	 */
 	private void report(String message)
 	{
 		Iterator<ReporterI> reportIt = reports.iterator();
@@ -99,6 +111,11 @@ public class NetworkListener extends Thread implements SBModule {
 		logs.logText(message);
 	}
 	
+	/**
+	 * Sends an error message to all ReporterI and LoggerI
+	 * @param message the error message
+	 * @param ste the stack trace, from Exception.getStackTrace()
+	 */
 	private void reportError(String message, StackTraceElement[] ste)
 	{
 		Iterator<ReporterI> reportIt = reports.iterator();

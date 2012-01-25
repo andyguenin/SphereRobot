@@ -2,7 +2,7 @@ package com.spherebot.logging;
 
 /**
  * Interface describing what a logger should do
- * @author Andy
+ * @author Andy Guenin
  *
  */
 public interface LoggerI {

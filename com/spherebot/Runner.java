@@ -23,6 +23,7 @@ public class Runner {
 		
 		
 		netListener.start();
+		
 		TestThread tt = new TestThread("127.0.0.1", 12351);
 		tt.start();
 	}

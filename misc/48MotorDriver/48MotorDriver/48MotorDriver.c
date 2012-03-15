@@ -25,6 +25,8 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 
+volatile int enabled = 0;
+
 /*! \brief CCW rotation patterns.
  *
  * Configuration of pin drive levels
@@ -149,7 +151,6 @@ ISR(PCINT0_vect)
 }
 
 
-
 /*! \brief  Initialize pin change interrupts for PORTB pin 1, 2 and 3.
  *
  * Sets up the pins used to sense the Hall sensor signals to generate
@@ -161,21 +162,53 @@ ISR(PCINT0_vect)
  */
 static void Init_MC_pin_change_interrupt( void )
 {
+
   PCMSK0 = (1<<PCINT1)|(1<<PCINT2)|(1<<PCINT3); //Enable pin change interrupt on PB1:3
   PCICR = 1<<PCIE0;    // Enable pin change interrupt0 (PORTB)
 }
 
+// MATLAB motor direction control interrupt
+ISR(PCINT1_vect)
+{
+	/*
+	short int dir = (PINC & 12)>>2;
+	switch(dir)
+	{
+		case 0:
+			//stop
+			enabled = 0;
+			break;
+		case 1:
+			//down
+			enabled = 1;
+			Set_Direction(!CLOCKWISE);
+			break;
+		case 2:
+			//up
+			enabled = 1;
+			Set_Direction(CLOCKWISE);
+			break;
+	}*/	
+}
+
+void Init_MC_pin_control_interrupt() 
+{
+	DDRB |= (1<<(10));
+	DDRB |= (1<<(10));
+	PCMSK1 = (1<<PCINT5)|(1<<PCINT4);
+	PCICR |= 1<<PCIE1;	
+}
 
 
-/*! \brief  Start an AD convertion and return result.
+/*! \brief  Start an AD conversion and return result.
  *
  * Starts an AD conversion on the specified ADC channel and returns
- * the result when the conversin is completed. Uses polling to wait for
+ * the result when the conversion is completed. Uses polling to wait for
  * the AD conversion to complete.
  *
  *  \param channel Specify the ADMUX register settings to access the correct channel.
  *
- *  \return adcResult 8-bit result (high byte of AD convertion).
+ *  \return adcResult 8-bit result (high byte of AD conversion).
  */
 unsigned char Get_ADC8(unsigned char muxSetting)
 {
@@ -203,12 +236,12 @@ unsigned char Get_ADC8(unsigned char muxSetting)
 static void Init_MC_timers( void )
 {
   //Timer Counter 0. OCRA and OCRB used for motor
-  TCCR0A = (1<<COM0A1)|(0<<COM0A0)|        // Clear OCRA on compare match
+ TCCR0A = (1<<COM0A1)|(0<<COM0A0)|        // Clear OCRA on compare match
            (1<<COM0B1)|(0<<COM0B0)|        // Clear OCRB on compare match
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (0<<CS02)|(0<<CS01)|(1<<CS00); // Prescaler = CLK/1
+           (0<<CS02)|(1<<CS01)|(0<<CS00); // Prescaler = CLK/32
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -216,7 +249,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR2B = (0<<FOC2A)|(0<<FOC2B)|
            (0<<WGM22)|                     // Fast PWM mode
-           (0<<CS22)|(0<<CS21)|(1<<CS20); // Prescaler = CLK/1
+           (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64
 
   // Synchronize timers
   TCNT0 = 0;
@@ -299,6 +332,7 @@ static void Set_Direction(unsigned char direction)
 }
 
 
+
 /*! \brief Main function for motor control example.
  *
  * Initialize speed variables to zero speed, and enabled operation in clockwise
@@ -321,6 +355,7 @@ int main( void )
 
   Init_MC_timers();
   Init_MC_pin_change_interrupt();
+  Init_MC_pin_control_interrupt();
   Init_ADC();
 
   DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
@@ -328,7 +363,7 @@ int main( void )
   PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
   DDR_HALL &= ~HALL_MASK;
   sei();
-  Set_Speed(speed);
+  // Set_Speed(speed);
   DDR_MC = MC_MASK;        // Enable outputs
 
   DDRC |= (1<<PC1);
@@ -363,8 +398,12 @@ int main( void )
         }
       }
     }
-
-    Set_Speed(speed);
+//	Set_Speed(128);
+//	if(enabled)
+		Set_Speed(speed);
+//	else
+//		Set_Speed(0);
+		
   }
   return 0;
 }

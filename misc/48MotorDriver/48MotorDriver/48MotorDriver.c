@@ -25,8 +25,15 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 
+#define SPEED 255
 volatile int enabled = 0;
 volatile int change = 0;
+
+void Set_Speed(unsigned char speed);
+void Set_Direction(unsigned char direction);
+void brake();
+void unbrake();
+
 /*! \brief CCW rotation patterns.
  *
  * Configuration of pin drive levels
@@ -178,6 +185,21 @@ static void Init_MC_pin_change_interrupt( void )
   PCICR = 1<<PCIE0;    // Enable pin change interrupt0 (PORTB)
 }
 
+
+void brake()
+{
+	cli();
+	PCICR &= ~(1<<PCIE0);
+	sei();
+}
+
+void unbrake()
+{
+	cli();
+	PCICR |= (1<<PCIE0);
+	sei();
+}
+
 // MATLAB motor direction control interrupt
 ISR(PCINT1_vect)
 {
@@ -186,17 +208,20 @@ ISR(PCINT1_vect)
 	{
 		case 0:
 			//stop
-			enabled = 0;
+			Set_Speed(0);
+			brake();
 			break;
 		case 1:
 			//down
-			enabled = 1;
+			unbrake();
 			Set_Direction(!CLOCKWISE);
+			Set_Speed(SPEED);
 			break;
 		case 2:
 			//up
-			enabled = 1;
+			unbrake();
 			Set_Direction(CLOCKWISE);
+			Set_Speed(SPEED);
 			break;
 	}
 }
@@ -259,6 +284,12 @@ static void Init_MC_timers( void )
            (0<<WGM22)|                     // Fast PWM mode
            (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64
 
+
+	// Timer one for braking
+	//TCCR1A = 0;
+	
+	
+	
   // Synchronize timers
   TCNT0 = 0;
   TCNT2 = 3;
@@ -298,7 +329,7 @@ static void Init_ADC( void )
  *
  *  \return void
  */
-static void Set_Speed(unsigned char speed)
+void Set_Speed(unsigned char speed)
 {
   TIFR0 = TIFR0;    // Clear TC0 interrupt flags
   while( !(TIFR0 & (1<<TOV0)));  // Wait for TOV to ensure that all registers are
@@ -412,18 +443,7 @@ int main( void )
         }
       }
     }*/
-	//Set_Speed(speed);
-	if(enabled)
-	{
-		Set_Speed(255);
-		
 	}	
-	else
-	{
-		Set_Speed(0);
-		
-	}
-  }
   return 0;
 }
 

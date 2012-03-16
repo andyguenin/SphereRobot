@@ -13,7 +13,7 @@ h = serial('COM4', 'Baudrate', 9600);
 disp('Connected to MAEVARM');
 fopen(h);
 disp('Opened MAEVARM');
-t = timer('TimerFcn', @stimeout, 'StartDelay', 0.3);
+t = timer('TimerFcn', @stimeout, 'StartDelay', 0.28);
 isset = 0;
 dir = 0;
 

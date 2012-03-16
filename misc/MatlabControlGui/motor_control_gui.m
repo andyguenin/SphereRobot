@@ -61,7 +61,7 @@ dir = 0;
    'Units','normalized');
    
    % Start the motor off
-    motor_off = true;
+    motor_off = true;5
     current_data = motor_off;
  
    % Assign the GUI a name to appear in the window title.

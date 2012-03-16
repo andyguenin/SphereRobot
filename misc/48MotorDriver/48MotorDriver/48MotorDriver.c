@@ -241,7 +241,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (0<<CS02)|(1<<CS01)|(0<<CS00); // Prescaler = CLK/32
+           (0<<CS02)|(1<<CS01)|(1<<CS00); // Prescaler = CLK/64 011
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -249,7 +249,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR2B = (0<<FOC2A)|(0<<FOC2B)|
            (0<<WGM22)|                     // Fast PWM mode
-           (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64
+           (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64 100
 
   // Synchronize timers
   TCNT0 = 0;

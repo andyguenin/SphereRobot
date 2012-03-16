@@ -170,7 +170,7 @@ static void Init_MC_pin_change_interrupt( void )
 // MATLAB motor direction control interrupt
 ISR(PCINT1_vect)
 {
-	/*
+	PORTB ^= (1<<7);
 	short int dir = (PINC & 12)>>2;
 	switch(dir)
 	{
@@ -188,15 +188,13 @@ ISR(PCINT1_vect)
 			enabled = 1;
 			Set_Direction(CLOCKWISE);
 			break;
-	}*/	
+	}
 }
 
 void Init_MC_pin_control_interrupt() 
 {
-	DDRB |= (1<<(10));
-	DDRB |= (1<<(10));
-	PCMSK1 = (1<<PCINT5)|(1<<PCINT4);
 	PCICR |= 1<<PCIE1;	
+	PCMSK1 = (1<<PCINT10)|(1<<PCINT11);
 }
 
 
@@ -241,7 +239,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (0<<CS02)|(1<<CS01)|(0<<CS00); // Prescaler = CLK/32
+           (0<<CS02)|(1<<CS01)|(1<<CS00); // Prescaler = CLK/64
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -315,7 +313,7 @@ static void Set_Speed(unsigned char speed)
  *
  *  \return void
  */
-static void Set_Direction(unsigned char direction)
+void Set_Direction(unsigned char direction)
 {
   if(direction == CLOCKWISE)
   {
@@ -348,6 +346,7 @@ int main( void )
   unsigned char speed = 0;
   unsigned char setspeed = 0;
   signed int current;
+  enabled = 0;
   MCUCR |= (1<<PUD);  // Disable all pull-ups
   hallMask = HALL_MASK; // Initialize hallMask variable
   //Set initial direction.
@@ -363,11 +362,16 @@ int main( void )
   PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
   DDR_HALL &= ~HALL_MASK;
   sei();
-  // Set_Speed(speed);
+  //Set_Speed(speed);
   DDR_MC = MC_MASK;        // Enable outputs
+
+  DDRB |= 1<<7;
+  //PORTB |= 1<<7;
 
   DDRC |= (1<<PC1);
   for(;;) {
+	  
+	/*
     // Get shunt voltage (current measurement)
     current = Get_ADC8(ADC_MUX_SHUNT_H);
     // If current consumption is too high, limit current
@@ -397,12 +401,13 @@ int main( void )
           --speed;
         }
       }
-    }
-//	Set_Speed(128);
-//	if(enabled)
-		Set_Speed(speed);
-//	else
-//		Set_Speed(0);
+    }*/
+	//Set_Speed(128);
+	if(enabled)
+	//	Set_Speed(speed);
+		Set_Speed(255);
+	else
+		Set_Speed(0);
 		
   }
   return 0;

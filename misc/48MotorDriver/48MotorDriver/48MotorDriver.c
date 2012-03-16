@@ -26,7 +26,7 @@
 #include "sensor_three_phase_BLDC.h"
 
 volatile int enabled = 0;
-
+volatile int change = 0;
 /*! \brief CCW rotation patterns.
  *
  * Configuration of pin drive levels
@@ -59,6 +59,15 @@ unsigned char drvPatternsCCW[] = {
 };
 
 
+void turn_on()
+{
+	PORTB |= (1<<7);
+}
+
+void turn_off()
+{
+	PORTB &= ~(1<<7);
+}
 
 /*! \brief CW rotation patterns.
  *
@@ -134,6 +143,7 @@ register unsigned char count asm("r10");
 //!
 ISR(PCINT0_vect)
 {
+
   unsigned char *pTemp;
   fastTemp.word = ((PIN_HALL & hallMask)>>1);  // Read Hall, Mask Pins, shift to use as pointer offset
 //  Line below is desirable performance wise, but causes an internal error in compiler
@@ -148,6 +158,7 @@ ISR(PCINT0_vect)
   TCCR0A = *(pTemp + PATTERN_COM0_OFFSET);    // Reconfigure output compare operation for T0
   TCCR2A = *(pTemp + PATTERN_COM2_OFFSET); // Reconfigure output compare operation for T2
   count--;
+ 
 }
 
 
@@ -170,7 +181,6 @@ static void Init_MC_pin_change_interrupt( void )
 // MATLAB motor direction control interrupt
 ISR(PCINT1_vect)
 {
-	PORTB ^= (1<<7);
 	short int dir = (PINC & 12)>>2;
 	switch(dir)
 	{
@@ -402,13 +412,17 @@ int main( void )
         }
       }
     }*/
-	//Set_Speed(128);
+	//Set_Speed(speed);
 	if(enabled)
-	//	Set_Speed(speed);
+	{
 		Set_Speed(255);
+		
+	}	
 	else
+	{
 		Set_Speed(0);
 		
+	}
   }
   return 0;
 }

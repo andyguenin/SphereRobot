@@ -128,9 +128,9 @@ register union _fastTemp{
 	
 register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
-register unsigned char count asm("r10");
+//register unsigned char count asm("r10");
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-
+unsigned char count = 100;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -387,6 +387,7 @@ int main( void )
   unsigned char speed = 0;
   unsigned char setspeed = 0;
   signed int current;
+  count = 200;
   enabled = 0;
   MCUCR |= (1<<PUD);  // Disable all pull-ups
   hallMask = HALL_MASK; // Initialize hallMask variable
@@ -443,6 +444,11 @@ int main( void )
         }
       }
     }*/
+	if(count < 180)
+	{
+		
+		PORTB |= 1<<7;
+	}
 	}	
   return 0;
 }

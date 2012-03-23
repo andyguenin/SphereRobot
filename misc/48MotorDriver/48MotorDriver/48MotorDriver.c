@@ -25,7 +25,14 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 
+#define SPEED 128
 volatile int enabled = 0;
+volatile int change = 0;
+
+void Set_Speed(unsigned char speed);
+void Set_Direction(unsigned char direction);
+void brake();
+void unbrake();
 
 /*! \brief CCW rotation patterns.
  *
@@ -59,6 +66,15 @@ unsigned char drvPatternsCCW[] = {
 };
 
 
+void turn_on()
+{
+	PORTB |= (1<<7);
+}
+
+void turn_off()
+{
+	PORTB &= ~(1<<7);
+}
 
 /*! \brief CW rotation patterns.
  *
@@ -112,9 +128,9 @@ register union _fastTemp{
 	
 register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
-register unsigned char count asm("r10");
+//register unsigned char count asm("r10");
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-
+unsigned char count = 100;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -134,6 +150,7 @@ register unsigned char count asm("r10");
 //!
 ISR(PCINT0_vect)
 {
+
   unsigned char *pTemp;
   fastTemp.word = ((PIN_HALL & hallMask)>>1);  // Read Hall, Mask Pins, shift to use as pointer offset
 //  Line below is desirable performance wise, but causes an internal error in compiler
@@ -148,6 +165,7 @@ ISR(PCINT0_vect)
   TCCR0A = *(pTemp + PATTERN_COM0_OFFSET);    // Reconfigure output compare operation for T0
   TCCR2A = *(pTemp + PATTERN_COM2_OFFSET); // Reconfigure output compare operation for T2
   count--;
+ 
 }
 
 
@@ -167,36 +185,51 @@ static void Init_MC_pin_change_interrupt( void )
   PCICR = 1<<PCIE0;    // Enable pin change interrupt0 (PORTB)
 }
 
+
+void brake()
+{
+	cli();
+	PCICR &= ~(1<<PCIE0);
+	sei();
+}
+
+void unbrake()
+{
+	cli();
+	PCICR |= (1<<PCIE0);
+	sei();
+}
+
 // MATLAB motor direction control interrupt
 ISR(PCINT1_vect)
 {
-	/*
 	short int dir = (PINC & 12)>>2;
 	switch(dir)
 	{
 		case 0:
 			//stop
-			enabled = 0;
+			Set_Speed(0);
+			brake();
 			break;
 		case 1:
 			//down
-			enabled = 1;
+			unbrake();
 			Set_Direction(!CLOCKWISE);
+			Set_Speed(SPEED);
 			break;
 		case 2:
 			//up
-			enabled = 1;
+			unbrake();
 			Set_Direction(CLOCKWISE);
+			Set_Speed(SPEED);
 			break;
-	}*/	
+	}
 }
 
 void Init_MC_pin_control_interrupt() 
 {
-	DDRB |= (1<<(10));
-	DDRB |= (1<<(10));
-	PCMSK1 = (1<<PCINT5)|(1<<PCINT4);
 	PCICR |= 1<<PCIE1;	
+	PCMSK1 = (1<<PCINT10)|(1<<PCINT11);
 }
 
 
@@ -241,7 +274,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (0<<CS02)|(1<<CS01)|(1<<CS00); // Prescaler = CLK/64 011
+           (0<<CS02)|(1<<CS01)|(1<<CS00); // Prescaler = CLK/64
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -251,6 +284,12 @@ static void Init_MC_timers( void )
            (0<<WGM22)|                     // Fast PWM mode
            (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64 100
 
+
+	// Timer one for braking
+	//TCCR1A = 0;
+	
+	
+	
   // Synchronize timers
   TCNT0 = 0;
   TCNT2 = 3;
@@ -290,7 +329,7 @@ static void Init_ADC( void )
  *
  *  \return void
  */
-static void Set_Speed(unsigned char speed)
+void Set_Speed(unsigned char speed)
 {
   TIFR0 = TIFR0;    // Clear TC0 interrupt flags
   while( !(TIFR0 & (1<<TOV0)));  // Wait for TOV to ensure that all registers are
@@ -315,7 +354,7 @@ static void Set_Speed(unsigned char speed)
  *
  *  \return void
  */
-static void Set_Direction(unsigned char direction)
+void Set_Direction(unsigned char direction)
 {
   if(direction == CLOCKWISE)
   {
@@ -348,6 +387,8 @@ int main( void )
   unsigned char speed = 0;
   unsigned char setspeed = 0;
   signed int current;
+  count = 200;
+  enabled = 0;
   MCUCR |= (1<<PUD);  // Disable all pull-ups
   hallMask = HALL_MASK; // Initialize hallMask variable
   //Set initial direction.
@@ -363,11 +404,16 @@ int main( void )
   PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
   DDR_HALL &= ~HALL_MASK;
   sei();
-  // Set_Speed(speed);
+  //Set_Speed(speed);
   DDR_MC = MC_MASK;        // Enable outputs
+
+  DDRB |= 1<<7;
+  //PORTB |= 1<<7;
 
   DDRC |= (1<<PC1);
   for(;;) {
+	  
+	/*
     // Get shunt voltage (current measurement)
     current = Get_ADC8(ADC_MUX_SHUNT_H);
     // If current consumption is too high, limit current
@@ -397,14 +443,13 @@ int main( void )
           --speed;
         }
       }
-    }
-//	Set_Speed(128);
-//	if(enabled)
-		Set_Speed(speed);
-//	else
-//		Set_Speed(0);
+    }*/
+	if(count < 180)
+	{
 		
-  }
+		PORTB |= 1<<7;
+	}
+	}	
   return 0;
 }
 

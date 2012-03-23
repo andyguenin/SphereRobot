@@ -44,7 +44,7 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../MotorTest.c
+../iotest.c
 
 
 PREPROCESSING_SRCS += 
@@ -54,42 +54,42 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-MotorTest.o
+iotest.o
 
 
 OBJS_AS_ARGS +=  \
-MotorTest.o
+iotest.o
 
 
 C_DEPS +=  \
-MotorTest.d
+iotest.d
 
 
 C_DEPS_AS_ARGS +=  \
-MotorTest.d
+iotest.d
 
 
-OUTPUT_FILE_PATH +=MotorTest.elf
+OUTPUT_FILE_PATH +=iotest.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=MotorTest.elf
+OUTPUT_FILE_PATH_AS_ARGS +=iotest.elf
 
-HEX_FLASH_FILE_PATH +=MotorTest.hex
+HEX_FLASH_FILE_PATH +=iotest.hex
 
-HEX_FLASH_FILE_PATH_AS_ARGS +=MotorTest.hex
+HEX_FLASH_FILE_PATH_AS_ARGS +=iotest.hex
 
-HEX_EEPROM_FILE_PATH +=MotorTest.eep
+HEX_EEPROM_FILE_PATH +=iotest.eep
 
-HEX_EEPROM_FILE_PATH_AS_ARGS +=MotorTest.eep
+HEX_EEPROM_FILE_PATH_AS_ARGS +=iotest.eep
 
-LSS_FILE_PATH +=MotorTest.lss
+LSS_FILE_PATH +=iotest.lss
 
-LSS_FILE_PATH_AS_ARGS +=MotorTest.lss
+LSS_FILE_PATH_AS_ARGS +=iotest.lss
 
-MAP_FILE_PATH =MotorTest.map
+MAP_FILE_PATH =iotest.map
 
-MAP_FILE_PATH_AS_ARGS =MotorTest.map
+MAP_FILE_PATH_AS_ARGS =iotest.map
 
-LIB_AS_ARGS +=libMotorTest.a
+LIB_AS_ARGS +=libiotest.a
 
 ADDITIONAL_DEPENDENCIES:= $(HEX_FLASH_FILE_PATH) $(LSS_FILE_PATH) $(HEX_EEPROM_FILE_PATH) size
 

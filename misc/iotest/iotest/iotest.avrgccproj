@@ -3,7 +3,7 @@
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>5.0</ProjectVersion>
-    <ProjectGuid>{4413f974-9480-4c0f-8660-e8b7abd582f2}</ProjectGuid>
+    <ProjectGuid>{76afc6b4-43ef-4293-95a8-308158494280}</ProjectGuid>
     <avrdevice>ATmega32U4</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
@@ -18,9 +18,9 @@
     <GlobalToolchainPath>C:\Program Files (x86)\Atmel\AVR Studio 5.0\AVR ToolChain\bin</GlobalToolchainPath>
     <AvrGccProjectExtensions>
     </AvrGccProjectExtensions>
-    <AssemblyName>MotorTest</AssemblyName>
-    <Name>MotorTest</Name>
-    <RootNamespace>MotorTest</RootNamespace>
+    <AssemblyName>iotest</AssemblyName>
+    <Name>iotest</Name>
+    <RootNamespace>iotest</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -61,7 +61,7 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MotorTest.c">
+    <Compile Include="iotest.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="m_general.h">

@@ -25,7 +25,7 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 
-#define SPEED 255
+#define SPEED 128
 volatile int enabled = 0;
 volatile int change = 0;
 

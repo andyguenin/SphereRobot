@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # AvrStudio Solution File, Format Version 11.00
-Project("{D1100916-62DA-4D80-A9B4-55A1E7CCEEB3}") = "MotorTest", "MotorTest\MotorTest.avrgccproj", "{4413F974-9480-4C0F-8660-E8B7ABD582F2}"
+Project("{D1100916-62DA-4D80-A9B4-55A1E7CCEEB3}") = "iotest", "iotest\iotest.avrgccproj", "{76AFC6B4-43EF-4293-95A8-308158494280}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|AVR = Release|AVR
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4413F974-9480-4C0F-8660-E8B7ABD582F2}.Debug|AVR.ActiveCfg = Debug|AVR
-		{4413F974-9480-4C0F-8660-E8B7ABD582F2}.Debug|AVR.Build.0 = Debug|AVR
-		{4413F974-9480-4C0F-8660-E8B7ABD582F2}.Release|AVR.ActiveCfg = Release|AVR
-		{4413F974-9480-4C0F-8660-E8B7ABD582F2}.Release|AVR.Build.0 = Release|AVR
+		{76AFC6B4-43EF-4293-95A8-308158494280}.Debug|AVR.ActiveCfg = Debug|AVR
+		{76AFC6B4-43EF-4293-95A8-308158494280}.Debug|AVR.Build.0 = Debug|AVR
+		{76AFC6B4-43EF-4293-95A8-308158494280}.Release|AVR.ActiveCfg = Release|AVR
+		{76AFC6B4-43EF-4293-95A8-308158494280}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

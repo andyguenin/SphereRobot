@@ -25,7 +25,7 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 
-#define SPEED 128
+#define SPEED 120
 volatile int enabled = 0;
 volatile int change = 0;
 
@@ -128,9 +128,9 @@ register union _fastTemp{
 	
 register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
-//register unsigned char count asm("r10");
+register unsigned char count asm("r10");
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-unsigned char count = 100;
+//unsigned char count = 100;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -204,22 +204,23 @@ void unbrake()
 ISR(PCINT1_vect)
 {
 	short int dir = (PINC & 12)>>2;
+	return;
 	switch(dir)
 	{
 		case 0:
 			//stop
 			Set_Speed(0);
-			brake();
+			//brake();
 			break;
 		case 1:
 			//down
-			unbrake();
+			//unbrake();
 			Set_Direction(!CLOCKWISE);
 			Set_Speed(SPEED);
 			break;
 		case 2:
 			//up
-			unbrake();
+			//unbrake();
 			Set_Direction(CLOCKWISE);
 			Set_Speed(SPEED);
 			break;
@@ -274,7 +275,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (0<<CS02)|(1<<CS01)|(1<<CS00); // Prescaler = CLK/64
+           (1<<CS02)|(0<<CS01)|(0<<CS00); // Prescaler = CLK/256
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -282,7 +283,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR2B = (0<<FOC2A)|(0<<FOC2B)|
            (0<<WGM22)|                     // Fast PWM mode
-           (1<<CS22)|(0<<CS21)|(0<<CS20); // Prescaler = CLK/64 100
+           (1<<CS22)|(1<<CS21)|(0<<CS20); // Prescaler = CLK/256
 
 
 	// Timer one for braking
@@ -384,7 +385,9 @@ void Set_Direction(unsigned char direction)
  */
 int main( void )
 {
-  unsigned char speed = 0;
+  CLKPR = (1<<CLKPCE); 
+  CLKPR=0x00;
+  unsigned char speed = 20;
   unsigned char setspeed = 0;
   signed int current;
   count = 200;
@@ -404,51 +407,46 @@ int main( void )
   PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
   DDR_HALL &= ~HALL_MASK;
   sei();
-  //Set_Speed(speed);
+  //Set_Speed(SPEED);
   DDR_MC = MC_MASK;        // Enable outputs
 
-  DDRB |= 1<<7;
+  //DDRB |= 1<<7;
   //PORTB |= 1<<7;
 
   DDRC |= (1<<PC1);
   for(;;) {
-	  
-	/*
-    // Get shunt voltage (current measurement)
-    current = Get_ADC8(ADC_MUX_SHUNT_H);
-    // If current consumption is too high, limit current
-    if (current > MAX_CURRENT_ADC )
-    {
-      PORTC &= ~(1<<OVERCURRENT_PIN);   //Turn on over-current LED (active low)
-      if( speed >= 2 )
-      {
-        speed -= 2; // Slow down if too fast.
-      }
-    }
-    else
-    {
-      PORTC |= (1<<OVERCURRENT_PIN); // Turn off over-current LED (active low)
-      // Get speed reference voltage (Assumes 2.5V to be maximum analog input,
-      // multiplied by 2 to convert to PWM range).
-      setspeed = Get_ADC8(ADC_MUX_SPEED_REF)*2;
-      // Approach speed set point.
-      if( setspeed > speed )
-      {
-        ++speed;
-      }
-      else
-      {
-        if( setspeed < speed )
-        {
-          --speed;
-        }
-      }
-    }*/
-	if(count < 180)
-	{
-		
-		PORTB |= 1<<7;
-	}
+		// Get shunt voltage (current measurement)
+		//current = Get_ADC8(ADC_MUX_SHUNT_H);
+		// If current consumption is too high, limit current
+		/*if (current > MAX_CURRENT_ADC )
+		{
+		  PORTC &= ~(1<<OVERCURRENT_PIN);   //Turn on over-current LED (active low)
+		  if( speed >= 2 )
+		  {
+			speed -= 2; // Slow down if too fast.
+		  }
+		}
+		else*/
+		{
+		  PORTC |= (1<<OVERCURRENT_PIN); // Turn off over-current LED (active low)
+		  // Get speed reference voltage (Assumes 2.5V to be maximum analog input,
+		  // multiplied by 2 to convert to PWM range).
+		  setspeed = Get_ADC8(ADC_MUX_SPEED_REF)*2;
+		  // Approach speed set point.
+		  if( setspeed > speed )
+		  {
+			++speed;
+			
+		  }
+		  else
+		  {
+			if( setspeed < speed )
+			{
+			  --speed;
+			}
+		  }
+		  Set_Speed(setspeed);
+		}
 	}	
   return 0;
 }

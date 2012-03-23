@@ -45,9 +45,9 @@
 
 //! \name Hall sensor input pins.
 //@{
-#define HALL1 PB1
-#define HALL2 PB2
-#define HALL3 PB3
+#define HALL1 PB0
+#define HALL2 PB1
+#define HALL3 PB2
 #define HALL_MASK  ((1<<HALL1)|(1<<HALL2)|(1<<HALL3))
 //@}
 

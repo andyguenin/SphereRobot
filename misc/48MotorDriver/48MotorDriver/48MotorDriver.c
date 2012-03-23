@@ -152,7 +152,7 @@ ISR(PCINT0_vect)
 {
 
   unsigned char *pTemp;
-  fastTemp.word = ((PIN_HALL & hallMask)>>1);  // Read Hall, Mask Pins, shift to use as pointer offset
+  fastTemp.word = (PIN_HALL & hallMask);  // Read Hall, Mask Pins, shift to use as pointer offset
 //  Line below is desirable performance wise, but causes an internal error in compiler
 //  fastTemp.LByte = (PIN_HALL & HALL_MASK)>>1;   // Read Hall, Mask Pins, shift to use as pointer offset
 
@@ -181,7 +181,7 @@ ISR(PCINT0_vect)
 static void Init_MC_pin_change_interrupt( void )
 {
 
-  PCMSK0 = (1<<PCINT1)|(1<<PCINT2)|(1<<PCINT3); //Enable pin change interrupt on PB1:3
+  PCMSK0 = (1<<PCINT0)|(1<<PCINT1)|(1<<PCINT2); //Enable pin change interrupt on PB1:3
   PCICR = 1<<PCIE0;    // Enable pin change interrupt0 (PORTB)
 }
 

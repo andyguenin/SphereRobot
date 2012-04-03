@@ -64,6 +64,9 @@
     <Compile Include="I2C.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="m_bus.c">
       <SubType>compile</SubType>
     </None>

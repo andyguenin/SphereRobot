@@ -7,22 +7,22 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "i2c.h"
 
 #define ADDRESS 1
-#define RESPOND_TO_ANNOUNCE
+#define RESPOND_TO_ANNOUNCE 1
 
-void init_i2c_slave_receiver();
-void init_all();
-
-#define TWI_COMM_MASK ((1<<TWEN)|(0<<TWSTO)|(0<<TWWC)|(1<<TWIE)|(1<<TWEA)|(0<<TWSTA)|(1<<TWINT))
 
 volatile char motor_command[2];
 volatile char pointer = 0;
 
+
+
+
 int main(void)
 {
 	init_all();
-	init_i2c_slave_receiver();
+	init_i2c_slave_receiver(ADDRESS, 0, 1);
 	while(motor_command[2]!=0x08);
 	
 	
@@ -36,34 +36,29 @@ void init_all()
 }
 
 
-void init_i2c_slave_receiver()
+void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned char respond_to_announce)
 {
 	motor_command[0] = 0;
 	motor_command[1] = 0;
 	DDRD = 0x1F;
 	PORTD = 0;
-	TWAR = ADDRESS << 1; // sets the slave address
-	//#ifdef RESPOND_TO_ANNOUNCE
+	TWAR = address << 1; // sets the slave address
+	if(respond_to_announce)
+	{
 		TWAR |= 1;
-	//#endif
+	}	
+	TWAMR = mask << 1;
 	TWDR = 0xFF;
 	cli();
-	TWCR = TWI_COMM_MASK;
-		
-	sei();
-	
-	while(motor_command[0] !=0x08);
-	PORTD = 1;
-	
+	TWCR = TWI_COMM_MASK;	
 }
 
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
-//	PORTD = status >> 3;
 	switch(status)
 	{
-		case(0x60):
+		case(0x60): 
 		case(0x70):
 			pointer = 0;
 			TWCR = TWI_COMM_MASK;

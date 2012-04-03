@@ -410,43 +410,20 @@ int main( void )
   //Set_Speed(SPEED);
   DDR_MC = MC_MASK;        // Enable outputs
 
-  //DDRB |= 1<<7;
-  //PORTB |= 1<<7;
-
-  DDRC |= (1<<PC1);
+  DDRB &= ~(1<<7); // limitswitch on input
+  DDRB |= 1<<6;
+  Set_Speed(200);
   for(;;) {
-		// Get shunt voltage (current measurement)
-		//current = Get_ADC8(ADC_MUX_SHUNT_H);
-		// If current consumption is too high, limit current
-		/*if (current > MAX_CURRENT_ADC )
+	
+		if(PINB & 1<<7)
 		{
-		  PORTC &= ~(1<<OVERCURRENT_PIN);   //Turn on over-current LED (active low)
-		  if( speed >= 2 )
-		  {
-			speed -= 2; // Slow down if too fast.
-		  }
-		}
-		else*/
+			PORTB |= 1<<6;			
+		}	  
+		else
 		{
-		  PORTC |= (1<<OVERCURRENT_PIN); // Turn off over-current LED (active low)
-		  // Get speed reference voltage (Assumes 2.5V to be maximum analog input,
-		  // multiplied by 2 to convert to PWM range).
-		  setspeed = Get_ADC8(ADC_MUX_SPEED_REF)*2;
-		  // Approach speed set point.
-		  if( setspeed > speed )
-		  {
-			++speed;
-			
-		  }
-		  else
-		  {
-			if( setspeed < speed )
-			{
-			  --speed;
-			}
-		  }
-		  Set_Speed(setspeed);
+			PORTB &= ~(1<<6);
 		}
+
 	}	
   return 0;
 }

@@ -1,5 +1,5 @@
-package com.spherebot;
-import com.spherebot.logging.LogCollection;
+package com.revo;
+import com.revo.logging.LogCollection;
 
 /**
  * This interface is implemented by all modules within the spherebot for easy reporting

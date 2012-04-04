@@ -1,11 +1,11 @@
-package com.spherebot.logging;
+package com.revo.logging;
 
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.spherebot.logging.LoggerI;
+import com.revo.logging.LoggerI;
 
 /**
  * Collection of logs that allows you to perform operations on all logs at once

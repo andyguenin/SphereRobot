@@ -1,4 +1,4 @@
-package com.spherebot.logging;
+package com.revo.logging;
 
 /**
  * Interface describing what a logger should do

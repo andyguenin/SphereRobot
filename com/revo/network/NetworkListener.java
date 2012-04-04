@@ -1,4 +1,4 @@
-package com.spherebot.network;
+package com.revo.network;
 
 
 
@@ -16,8 +16,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.spherebot.SBModule;
-import com.spherebot.logging.LogCollection;
+import com.revo.SBModule;
+import com.revo.logging.LogCollection;
 
 
 public class NetworkListener extends Thread implements SBModule {

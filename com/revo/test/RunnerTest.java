@@ -1,4 +1,4 @@
-package com.spherebot.test;
+package com.revo.test;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package com.spherebot.logging;
+package com.revo.logging;
 
 import java.io.IOException;
 

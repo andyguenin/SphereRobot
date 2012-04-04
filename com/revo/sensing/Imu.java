@@ -1,7 +1,7 @@
-package com.spherebot.sensing;
+package com.revo.sensing;
 
-import com.spherebot.SBModule;
-import com.spherebot.logging.LogCollection;
+import com.revo.SBModule;
+import com.revo.logging.LogCollection;
 
 public class Imu implements SBModule{
 	LogCollection logCollection;

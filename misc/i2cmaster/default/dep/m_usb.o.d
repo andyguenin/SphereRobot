@@ -1,6 +1,4 @@
-m_usb.o: ../../../../../../Downloads/m_usb.c \
-  ../../../../../../Downloads/m_usb.h \
-  ../../../../../../Downloads/m_general.h \
+m_usb.o: ../m_usb.c ../m_usb.h ../m_general.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdint.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stdbool.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
@@ -20,9 +18,9 @@ m_usb.o: ../../../../../../Downloads/m_usb.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/math.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h
 
-../../../../../../Downloads/m_usb.h:
+../m_usb.h:
 
-../../../../../../Downloads/m_general.h:
+../m_general.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdint.h:
 

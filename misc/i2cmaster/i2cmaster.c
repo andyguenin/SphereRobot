@@ -22,6 +22,7 @@ int main()
 	m_usb_init();
 	while(!m_usb_isconnected());
 	m_green(ON);
+	TWBR = 43;
 
 	for(int i = 0; i < 3; i ++)
 	{	
@@ -40,9 +41,9 @@ int main()
 	DDRF |= 0xF2;
 	PORTF = 0;
 	// ADDRESS
-	m_usb_tx_string("sending address + w");
+	m_usb_tx_string("sending address + r");
 	m_usb_tx_push();
-	status = send_byte(address<<1);
+	status = send_byte((address<<1));
 	m_usb_tx_string("status: ");
 	m_usb_tx_uint(status);
 	m_usb_tx_push();
@@ -50,32 +51,182 @@ int main()
 		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
 		return 0;	// failure
 	}
-	PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
-	
-
-
-    if(status == 0x18)
+	//PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
+	m_usb_tx_string("status: ");
+	m_usb_tx_uint(status);
+	m_usb_tx_push();
+	if(status == 0x18)
 	{
-		TWDR = 0x08;
-		TWCR = (0 << TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
-		if(twi_wait())
+		TWDR = 0x01;
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		TWDR = ((address << 1)|1);
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		if(status != 0x40)
+			return 0;
+		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		if(status != 0x58)
+			return 0;
+		m_usb_tx_string("value: ");
+		m_usb_tx_uint(TWDR);
+		m_usb_tx_push();
+		if(TWDR == 0x08)
 		{
-			status = TWSR & 0xf8;
-			m_usb_tx_string("status: ");
-			m_usb_tx_uint(status);
-			m_usb_tx_push();
-			if(status == 0x28)
-			{
-				TWCR = (0 <<TWSTA)|(1<<TWSTA)|(1<<TWINT);
-				m_green(ON);
-			}
-		}
-		else
-		{
-			m_red(ON);	
+			TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+			m_green(ON);
 		}
 	}
-	/*if(status == 0x30)
+	else
+	{
+		m_red(ON);
+	}
+
+
+	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enables TWI, tries to become master, and clears the interrupt flag
+	while(!(TWCR & (1<<TWINT)));
+	status = 0xf8 & TWSR;
+	m_usb_tx_string("status: ");
+	m_usb_tx_uint(status);
+	m_usb_tx_push();
+	m_usb_tx_string("sending address + r");
+	m_usb_tx_push();
+	status = send_byte((address<<1));
+	m_usb_tx_string("status: ");
+	m_usb_tx_uint(status);
+	m_usb_tx_push();
+	if(status== 0x20){ // ACK was not received - may not be connected/listening
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;	// failure
+	}
+	//PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
+	m_usb_tx_string("status: ");
+	m_usb_tx_uint(status);
+	m_usb_tx_push();
+	if(status == 0x18)
+	{
+		TWDR = 0x02;
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		TWDR = ((address << 1)|1);
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		if(status != 0x40)
+			return 0;
+		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		if(status != 0x40)
+			return 0;
+		m_usb_tx_string("value: ");
+		m_usb_tx_uint(TWDR);
+		m_usb_tx_push();
+		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
+		if(status != 0x58)
+			return 0;
+		m_usb_tx_string("value: ");
+		m_usb_tx_uint(TWDR);
+		m_usb_tx_push();
+		if(TWDR == 0x0a)
+		{
+			TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+			m_green(ON);
+		}
+	}
+	else
+	{
+		m_red(ON);
+	}
+
+
+/*
+    if(status == 0x40)
+	{
+		int received = 0;
+		TWCR = (0 << TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA)|(1<<TWEN);
+		int cont = 1;
+		while(cont)
+		{
+			while(!(TWCR & (1<<TWINT)));
+
+			{
+				int ss = TWSR & 0xf8;
+					m_usb_tx_string("status: ");
+					m_usb_tx_uint(ss);
+					m_usb_tx_push();
+				if(ss == 0x50)
+				{
+					m_usb_tx_string("received: ");
+					received = TWDR;
+					m_usb_tx_int(received);
+					m_usb_tx_string(":end;;;;;;");
+					m_usb_tx_push();
+					m_wait(1000);
+					if(received != 10)
+					{
+						TWCR = (0 <<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA)|(1<<TWEN);
+					}
+					else
+					{
+						TWCR = (0 <<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA)|(1<<TWEN);
+					}
+					m_green(ON);
+				}
+				if(ss == 0x58)
+				{
+					TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+					m_green(OFF);
+					cont = 0;
+				}
+			}
+		}
+	}
+	else
+	{
+		m_red(ON);
+	}
+	if(status == 0x30)
 	{
 		status = send_byte(8);
 		if(status == 0x28)

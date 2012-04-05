@@ -52,7 +52,7 @@ i2cmaster.o: ../i2cmaster.c
 m_bus.o: ../m_bus.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-m_usb.o: ../../../../../../Downloads/m_usb.c
+m_usb.o: ../m_usb.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

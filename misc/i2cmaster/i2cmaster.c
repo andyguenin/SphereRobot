@@ -1,6 +1,7 @@
 #include "m_general.h"
 #include "m_bus.h"
 #include "m_usb.h"
+#include <string.h>
 
 #define MWIITWIADDR		0x58
 #define TWI_MAX_WAIT	1000
@@ -12,6 +13,13 @@ unsigned char start_read(unsigned char address);
 unsigned char send_byte(unsigned char byte);
 unsigned char twi_wait(void);
 void end(void);
+
+
+
+void wait()
+{
+	m_wait(1000);
+}
 
 
 int main()
@@ -43,10 +51,8 @@ int main()
 	// ADDRESS
 	m_usb_tx_string("sending address + r");
 	m_usb_tx_push();
-	status = send_byte((address<<1));
-	m_usb_tx_string("status: ");
-	m_usb_tx_uint(status);
-	m_usb_tx_push();
+	status = send_byte((address<<1)); // 0x08 start cond trans
+
 	if(status== 0x20){ // ACK was not received - may not be connected/listening
 		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
 		return 0;	// failure
@@ -55,21 +61,27 @@ int main()
 	m_usb_tx_string("status: ");
 	m_usb_tx_uint(status);
 	m_usb_tx_push();
-	if(status == 0x18)
+	if(status == 0x18) //SLA+W txed, ack received
 	{
 		TWDR = 0x01;
-		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); //data will be txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		m_usb_tx_string("status: ");
 		m_usb_tx_uint(status);
 		m_usb_tx_push();
-		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		if(status  != 0x28)
+			return 0;
+		m_wait(1000);
+		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); // data  has been txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		m_usb_tx_string("status: ");
 		m_usb_tx_uint(status);
 		m_usb_tx_push();
+		if(status != 0x10)
+			return 0;
+		m_wait(1000);
 		TWDR = ((address << 1)|1);
 		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 		while(!(TWCR & (1<<TWINT)));
@@ -79,6 +91,7 @@ int main()
 		m_usb_tx_push();
 		if(status != 0x40)
 			return 0;
+		m_wait(1000);
 		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
@@ -90,16 +103,22 @@ int main()
 		m_usb_tx_string("value: ");
 		m_usb_tx_uint(TWDR);
 		m_usb_tx_push();
+		m_wait(1000);
+		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 		if(TWDR == 0x08)
 		{
-			TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 			m_green(ON);
 		}
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
 	}
 	else
 	{
 		m_red(ON);
 	}
+
 
 
 	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enables TWI, tries to become master, and clears the interrupt flag
@@ -119,24 +138,27 @@ int main()
 		return 0;	// failure
 	}
 	//PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
-	m_usb_tx_string("status: ");
-	m_usb_tx_uint(status);
-	m_usb_tx_push();
 	if(status == 0x18)
 	{
 		TWDR = 0x02;
-		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); //data will be txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		m_usb_tx_string("status: ");
 		m_usb_tx_uint(status);
 		m_usb_tx_push();
-		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		if(status  != 0x28)
+			return 0;
+		m_wait(1000);
+		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); // data  has been txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		m_usb_tx_string("status: ");
 		m_usb_tx_uint(status);
 		m_usb_tx_push();
+		if(status != 0x10)
+			return 0;
+		m_wait(1000);
 		TWDR = ((address << 1)|1);
 		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 		while(!(TWCR & (1<<TWINT)));
@@ -146,17 +168,19 @@ int main()
 		m_usb_tx_push();
 		if(status != 0x40)
 			return 0;
+		m_wait(1000);
 		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		m_usb_tx_string("status: ");
 		m_usb_tx_uint(status);
 		m_usb_tx_push();
-		if(status != 0x40)
+		if(status != 0x50)
 			return 0;
 		m_usb_tx_string("value: ");
 		m_usb_tx_uint(TWDR);
 		m_usb_tx_push();
+		m_wait(1000);
 		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
@@ -168,11 +192,16 @@ int main()
 		m_usb_tx_string("value: ");
 		m_usb_tx_uint(TWDR);
 		m_usb_tx_push();
-		if(TWDR == 0x0a)
+		m_wait(1000);
+		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+		if(TWDR == 0x08)
 		{
-			TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 			m_green(ON);
 		}
+		status = TWSR & 0xF8;
+		m_usb_tx_string("status: ");
+		m_usb_tx_uint(status);
+		m_usb_tx_push();
 	}
 	else
 	{

@@ -17,7 +17,8 @@ i2cmaster.o: ../i2cmaster.c ../m_general.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/math.h ../m_bus.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/twi.h ../m_usb.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h
+  c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/string.h
 
 ../m_general.h:
 
@@ -62,3 +63,5 @@ c:/winavr-20100110/lib/gcc/../../avr/include/util/twi.h:
 ../m_usb.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
+
+c:/winavr-20100110/lib/gcc/../../avr/include/string.h:

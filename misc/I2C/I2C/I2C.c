@@ -35,6 +35,7 @@ void init_all()
 {
 	CLKPR = 1<<7;
 	CLKPR = 0;
+	DDRB |= ((1<<6) | (1<<7) | 1);
 }
 
 
@@ -52,13 +53,22 @@ void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned
 	TWAMR = mask << 1;
 	TWDR = 0xFF;
 	TWCR = TWI_COMM_MASK;
-	PORTD |= 1;	
 }
 
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
 	PORTD = status >> 2;
+	//PORTD = 0;
+	/*if(PORTB & 1<<7)
+	{
+		PORTD = status >> 2;
+		PORTB &= ~(1<<7);
+	}	
+	//PORTB &= ~(1<<7);
+	PORTB |= 1;
+	//PORTB |= 1<<6;
+	//PORTB |= 1<<7;*/
 	switch(status)
 	{
 		// The following are commands received in SRx mode
@@ -74,6 +84,10 @@ ISR(TWI_vect)
 				motor_command[pointer] = TWDR;
 				pointer++;
 			}		
+			if(PORTB & (1<<6))
+			{
+				PORTB |= 1<<7;
+			}			
 			TWCR = TWI_COMM_MASK; // Data byte will be received and ACK returned
 			break;
 		case(0xA0): // STOP condition or repeated START condition 
@@ -83,32 +97,32 @@ ISR(TWI_vect)
 		case(0xA8): // Own SLA+R has been received, ACK has been returned
 			if(motor_command[0] == 0x01)
 			{
-				PORTD |= 1;
 				TWDR = 0x08;
-				TWCR = TWI_COMM_MASK & (~(1<<TWEA));
+				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
 			}
 			if(motor_command[0] == 0x02)
 			{
 				TWDR = 0x0a;
 				TWCR = TWI_COMM_MASK;
-				test_send = 1;
-			}
-			
+			}		
 			break;
 		case(0xB8):	// Data byte in TWDR has bee Txed, ACK received
-
-			
 			if(motor_command[0] == 0x02)
 			{
 				TWDR = 0x09;
 				TWCR = TWI_COMM_MASK & (~(1<<TWEA));			
-			}						
-				
+			}		
 			break;
-		case(0xC8): // Last data byte has been transmitted
-			TWCR = TWI_COMM_MASK & ~(1<<TWEA); // switched to non addressed slave mode, sla will be recog
+		case(0xC8):
+		case(0xC0): // Last data byte has been transmitted
+			TWDR = 0;
+			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
+			PORTB |= 1<<6;
+			break;
+		case(0xf8):
 			break;
 		default: // Something unexpected happened
+			
 			break;
 	}
 }

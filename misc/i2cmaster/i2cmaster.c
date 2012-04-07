@@ -8,12 +8,11 @@
 #define INTERPACKET		10
 
 
-unsigned char start_write(unsigned char address);
-unsigned char start_read(unsigned char address);
 unsigned char send_byte(unsigned char byte);
 unsigned char twi_wait(void);
 void end(void);
-
+unsigned char get_motor_speed(void);
+char send_data(char command, char data);
 
 
 void wait()
@@ -21,6 +20,7 @@ void wait()
 	m_wait(1000);
 }
 
+unsigned char address = 1;
 
 int main()
 {
@@ -38,9 +38,26 @@ int main()
 	}
 	m_green(OFF);
 
-	unsigned char address = 1;
-	unsigned char status;
+	m_usb_tx_string("value: ");
+	int send = (int)(get_motor_speed());
+	m_usb_tx_uint(send);
+	m_usb_tx_push();
+	send_data(0x01, 0x02);
+	m_red(ON);
+	m_usb_tx_string("sent1: ");
+	m_usb_tx_push();
+	send_data(0x03, 0x04);
+	m_usb_tx_string("sent2: ");
+	m_usb_tx_push();
+
+	
 	// START
+
+}
+
+unsigned char get_motor_speed()
+{
+	unsigned char status;
 	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enables TWI, tries to become master, and clears the interrupt flag
 	if(!twi_wait())
 	{
@@ -49,8 +66,6 @@ int main()
 	DDRF |= 0xF2;
 	PORTF = 0;
 	// ADDRESS
-	m_usb_tx_string("sending address + r");
-	m_usb_tx_push();
 	status = send_byte((address<<1)); // 0x08 start cond trans
 
 	if(status== 0x20){ // ACK was not received - may not be connected/listening
@@ -58,81 +73,45 @@ int main()
 		return 0;	// failure
 	}
 	//PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
-	m_usb_tx_string("status: ");
-	m_usb_tx_uint(status);
-	m_usb_tx_push();
 	if(status == 0x18) //SLA+W txed, ack received
 	{
-		TWDR = 0x01;
+		TWDR = 0x04;
 		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); //data will be txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
 		if(status  != 0x28)
 			return 0;
-		m_wait(1000);
 		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); // data  has been txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
 		if(status != 0x10)
 			return 0;
-		m_wait(1000);
 		TWDR = ((address << 1)|1);
 		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
 		if(status != 0x40)
 			return 0;
-		m_wait(1000);
 		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
 		if(status != 0x58)
 			return 0;
-		m_usb_tx_string("value: ");
-		m_usb_tx_uint(TWDR);
-		m_usb_tx_push();
-		m_wait(1000);
+		char data = TWDR;
 		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
-		if(TWDR == 0x08)
-		{
-			m_green(ON);
-		}
-		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
+		return data;
 	}
-	else
-	{
-		m_red(ON);
-	}
+	return 0x00;
+}
 
 
-
+char send_data(char command, char data)
+{
+	unsigned char status=0;
 	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enables TWI, tries to become master, and clears the interrupt flag
 	while(!(TWCR & (1<<TWINT)));
 	status = 0xf8 & TWSR;
-	m_usb_tx_string("status: ");
-	m_usb_tx_uint(status);
-	m_usb_tx_push();
-	m_usb_tx_string("sending address + r");
-	m_usb_tx_push();
 	status = send_byte((address<<1));
-	m_usb_tx_string("status: ");
-	m_usb_tx_uint(status);
-	m_usb_tx_push();
 	if(status== 0x20){ // ACK was not received - may not be connected/listening
 		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
 		return 0;	// failure
@@ -140,74 +119,24 @@ int main()
 	//PORTF = (0xF0 & status) | ((0x8 & status) >> 2);
 	if(status == 0x18)
 	{
-		TWDR = 0x02;
+		TWDR = command;
 		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); //data will be txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
 		if(status  != 0x28)
 			return 0;
-		m_wait(1000);
-		TWCR = (1<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); // data  has been txed
+		TWDR = data;
+		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN); // data  has been txed
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
-		if(status != 0x10)
+		if(status != 0x28)
 			return 0;
-		m_wait(1000);
-		TWDR = ((address << 1)|1);
-		TWCR = (0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEN);
-		while(!(TWCR & (1<<TWINT)));
-		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
-		if(status != 0x40)
-			return 0;
-		m_wait(1000);
-		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA);
-		while(!(TWCR & (1<<TWINT)));
-		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
-		if(status != 0x50)
-			return 0;
-		m_usb_tx_string("value: ");
-		m_usb_tx_uint(TWDR);
-		m_usb_tx_push();
-		m_wait(1000);
-		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
-		while(!(TWCR & (1<<TWINT)));
-		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
-		if(status != 0x58)
-			return 0;
-		m_usb_tx_string("value: ");
-		m_usb_tx_uint(TWDR);
-		m_usb_tx_push();
-		m_wait(1000);
-		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
-		if(TWDR == 0x08)
-		{
-			m_green(ON);
-		}
-		status = TWSR & 0xF8;
-		m_usb_tx_string("status: ");
-		m_usb_tx_uint(status);
-		m_usb_tx_push();
-	}
-	else
-	{
-		m_red(ON);
-	}
+		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);		
+		return 1;
 
+	}
+	return 0;
+}
 
 /*
     if(status == 0x40)
@@ -271,45 +200,8 @@ int main()
 	{
 		m_red(ON);
 	}	*/	
-}
 
-unsigned char start_write(unsigned char address)
-{
-	unsigned char status;
-	// START
-	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
-	if(!twi_wait())
-	{
-		return 0;
-	}
-	
-	// ADDRESS
-	status = send_byte(address<<1);
-	if(status== 0x20){ // ACK was not received - may not be connected/listening
-		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
-		return 0;	// failure
-	}	
-	return 1;	// success
-}	
 
-unsigned char start_read(unsigned char address)
-{
-	unsigned char status;
-	// START
-	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
-	if(!twi_wait())
-	{
-		return 0;
-	}
-	
-	// ADDRESS
-	status = send_byte(((address<<1) + 1));
-	if(status== 0x48){ // ACK was not received - may not be connected/listening
-		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
-		return 0;	// failure
-	}	
-	return 1;	// success
-}	
 
 unsigned char send_byte(unsigned char byte)
 {

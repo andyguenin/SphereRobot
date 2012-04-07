@@ -8,7 +8,7 @@ c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5
 Allocating common symbols
 Common symbol       size              file
 
-command             0x1               I2C.o
+tx_num              0x2               I2C.o
 motor_command       0x2               I2C.o
 
 Memory Configuration
@@ -121,7 +121,7 @@ LOAD c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/av
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x2d0
+.text           0x00000000      0x370
  *(.vectors)
  .vectors       0x00000000       0x34 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/../../../../avr/lib/avr4/crtm48p.o
                 0x00000000                __vector_default
@@ -200,22 +200,25 @@ LOAD c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/av
                 0x00000054                __vector_16
                 0x00000054                __vector_18
                 0x00000054                __vector_20
- .text          0x00000056      0x276 I2C.o
+ .text          0x00000056      0x316 I2C.o
                 0x00000056                main
-                0x0000006c                init_all
-                0x0000009e                init_i2c_slave_receiver
-                0x0000011a                __vector_24
- .text          0x000002cc        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
- .text          0x000002cc        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
-                0x000002cc                . = ALIGN (0x2)
+                0x0000014c                tx_var
+                0x00000170                init_all
+                0x00000190                command_ready
+                0x000001a2                command
+                0x000001b8                init_i2c_slave_receiver
+                0x00000222                __vector_24
+ .text          0x0000036c        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
+ .text          0x0000036c        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
+                0x0000036c                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x000002cc        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
- .text.libgcc   0x000002cc        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
-                0x000002cc                . = ALIGN (0x2)
+ .text.libgcc   0x0000036c        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
+ .text.libgcc   0x0000036c        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
+                0x0000036c                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000002cc        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
-                0x000002cc                _exit
-                0x000002cc                exit
+ .fini9         0x0000036c        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
+                0x0000036c                _exit
+                0x0000036c                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -234,11 +237,11 @@ LOAD c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/av
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000002cc        0x4 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
+ .fini0         0x0000036c        0x4 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x000002d0                _etext = .
+                0x00000370                _etext = .
 
-.data           0x00800100        0x0 load address 0x000002d0
+.data           0x00800100        0x0 load address 0x00000370
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/../../../../avr/lib/avr4/crtm48p.o
@@ -253,30 +256,31 @@ LOAD c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/av
                 0x00800100                _edata = .
                 0x00800100                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x5
+.bss            0x00800100        0x7
                 0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800100        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/../../../../avr/lib/avr4/crtm48p.o
- .bss           0x00800100        0x2 I2C.o
+ .bss           0x00800100        0x3 I2C.o
                 0x00800100                pointer
                 0x00800101                test_send
- .bss           0x00800102        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
- .bss           0x00800102        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
+                0x00800102                run_command
+ .bss           0x00800103        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_exit.o)
+ .bss           0x00800103        0x0 c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/avr/4.5.1/avr4\libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800102        0x3 I2C.o
-                0x00800102                command
-                0x00800103                motor_command
-                0x00800105                PROVIDE (__bss_end, .)
-                0x000002d0                __data_load_start = LOADADDR (.data)
-                0x000002d0                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800103        0x4 I2C.o
+                0x00800103                tx_num
+                0x00800105                motor_command
+                0x00800107                PROVIDE (__bss_end, .)
+                0x00000370                __data_load_start = LOADADDR (.data)
+                0x00000370                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800105        0x0
-                0x00800105                PROVIDE (__noinit_start, .)
+.noinit         0x00800107        0x0
+                0x00800107                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800105                PROVIDE (__noinit_end, .)
-                0x00800105                _end = .
-                0x00800105                PROVIDE (__heap_start, .)
+                0x00800107                PROVIDE (__noinit_end, .)
+                0x00800107                _end = .
+                0x00800107                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -335,32 +339,32 @@ LOAD c:/program files (x86)/atmel/avr studio 5.0/avr toolchain/bin/../lib/gcc/av
                 0x00000000       0x20 I2C.o
 
 .debug_pubnames
-                0x00000000       0x8c
+                0x00000000       0xc4
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000       0x8c I2C.o
+                0x00000000       0xc4 I2C.o
 
-.debug_info     0x00000000      0x18a
+.debug_info     0x00000000      0x243
  *(.debug_info)
- .debug_info    0x00000000      0x18a I2C.o
+ .debug_info    0x00000000      0x243 I2C.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000       0xd1
+.debug_abbrev   0x00000000      0x118
  *(.debug_abbrev)
- .debug_abbrev  0x00000000       0xd1 I2C.o
+ .debug_abbrev  0x00000000      0x118 I2C.o
 
-.debug_line     0x00000000      0x2c5
+.debug_line     0x00000000      0x355
  *(.debug_line)
- .debug_line    0x00000000      0x2c5 I2C.o
+ .debug_line    0x00000000      0x355 I2C.o
 
-.debug_frame    0x00000000       0x50
+.debug_frame    0x00000000       0x80
  *(.debug_frame)
- .debug_frame   0x00000000       0x50 I2C.o
+ .debug_frame   0x00000000       0x80 I2C.o
 
-.debug_str      0x00000000      0x111
+.debug_str      0x00000000      0x139
  *(.debug_str)
- .debug_str     0x00000000      0x111 I2C.o
-                                0x152 (size before relaxing)
+ .debug_str     0x00000000      0x139 I2C.o
+                                0x17a (size before relaxing)
 
 .debug_loc
  *(.debug_loc)

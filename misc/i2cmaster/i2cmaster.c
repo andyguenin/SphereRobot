@@ -11,7 +11,7 @@
 unsigned char send_byte(unsigned char byte);
 unsigned char twi_wait(void);
 void end(void);
-unsigned char get_motor_speed(void);
+unsigned int get_motor_speed(void);
 char send_data(char command, char data);
 
 
@@ -32,30 +32,47 @@ int main()
 	m_green(ON);
 	TWBR = 43;
 
-	for(int i = 0; i < 3; i ++)
+	for(int i = 0; i < 1; i ++)
 	{	
 		m_wait(2000);
 	}
 	m_green(OFF);
+	unsigned int prev_rot = 0;
+	unsigned int rot;
+	send_data(0x01,0xff);
+	while(1)
+	{
+		m_wait(100);
+		rot = get_motor_speed();
+		if(rot != prev_rot)
+		{
 
-	m_usb_tx_string("value: ");
-	int send = (int)(get_motor_speed());
-	m_usb_tx_uint(send);
-	m_usb_tx_push();
-	send_data(0x01, 0x02);
-	m_red(ON);
-	m_usb_tx_string("sent1: ");
-	m_usb_tx_push();
-	send_data(0x03, 0x04);
-	m_usb_tx_string("sent2: ");
-	m_usb_tx_push();
+			m_usb_tx_string("new: ");
+			m_usb_tx_uint((int)(rot));
+			prev_rot = rot;
+		}
 
-	
+	}
+	m_wait(2000);
+	send_data(0x02,0xff);
+	while(1)
+	{
+		m_wait(100);
+		rot = get_motor_speed();
+		if(rot != prev_rot)
+		{
+
+			m_usb_tx_string("new: ");
+			m_usb_tx_uint((int)(rot));
+			prev_rot = rot;
+		}
+
+	}	
 	// START
 
 }
 
-unsigned char get_motor_speed()
+unsigned int get_motor_speed()
 {
 	unsigned char status;
 	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT); // Enables TWI, tries to become master, and clears the interrupt flag
@@ -92,12 +109,19 @@ unsigned char get_motor_speed()
 		status = TWSR & 0xF8;
 		if(status != 0x40)
 			return 0;
+		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(1<<TWEA);
+		while(!(TWCR & (1<<TWINT)));
+		status = TWSR & 0xF8;
+		if(status != 0x50)
+			return 0;
+		char data1 = TWDR;
 		TWCR= (1<<TWEN)|(0<<TWSTA)|(0<<TWSTO)|(1<<TWINT)|(0<<TWEA);
 		while(!(TWCR & (1<<TWINT)));
 		status = TWSR & 0xF8;
 		if(status != 0x58)
 			return 0;
-		char data = TWDR;
+		char data2 = TWDR;
+		int data = (((int)(data2))<<8) | ((int)(data1));
 		TWCR = (0<<TWSTA)|(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
 		return data;
 	}

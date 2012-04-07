@@ -24,6 +24,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
+#include "i2c.h"
 
 #define SPEED 120
 volatile int enabled = 0;
@@ -128,9 +129,9 @@ register union _fastTemp{
 	
 register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
-register unsigned char count asm("r10");
+//unsigned char count;
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-//unsigned char count = 100;
+volatile unsigned int count = 0;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -164,7 +165,7 @@ ISR(PCINT0_vect)
 
   TCCR0A = *(pTemp + PATTERN_COM0_OFFSET);    // Reconfigure output compare operation for T0
   TCCR2A = *(pTemp + PATTERN_COM2_OFFSET); // Reconfigure output compare operation for T2
-  count--;
+  count++;
  
 }
 
@@ -227,11 +228,6 @@ ISR(PCINT1_vect)
 	}
 }
 
-void Init_MC_pin_control_interrupt() 
-{
-	PCICR |= 1<<PCIE1;	
-	PCMSK1 = (1<<PCINT10)|(1<<PCINT11);
-}
 
 
 /*! \brief  Start an AD conversion and return result.
@@ -387,10 +383,9 @@ int main( void )
 {
   CLKPR = (1<<CLKPCE); 
   CLKPR=0x00;
-  unsigned char speed = 20;
+  unsigned char speed = 0;
   unsigned char setspeed = 0;
   signed int current;
-  count = 200;
   enabled = 0;
   MCUCR |= (1<<PUD);  // Disable all pull-ups
   hallMask = HALL_MASK; // Initialize hallMask variable
@@ -399,7 +394,6 @@ int main( void )
 
   Init_MC_timers();
   Init_MC_pin_change_interrupt();
-  Init_MC_pin_control_interrupt();
   Init_ADC();
 
   DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
@@ -410,19 +404,49 @@ int main( void )
   //Set_Speed(SPEED);
   DDR_MC = MC_MASK;        // Enable outputs
 
+
+  init_i2c_slave_receiver(0x1,0x0,0x1);
+  tx_var(&count);
   DDRB &= ~(1<<7); // limitswitch on input
-  DDRB |= 1<<6;
-  Set_Speed(200);
   for(;;) {
 	
-		if(PINB & 1<<7)
+	if(PINB & (1<<7))
+	{
+		count = 0;
+	}
+
+if(command_ready())
 		{
-			PORTB |= 1<<6;			
-		}	  
-		else
-		{
-			PORTB &= ~(1<<6);
+			char* m_c = command();
+			switch(m_c[0])
+			{
+			case(CALIBRATE):
+				break;
+			case(IN):		
+				unbrake();
+				Set_Direction(CLOCKWISE);
+				Set_Speed(SPEED);
+				while(count < 1000);
+				Set_Speed(0);
+				brake();
+				break;
+			case(OUT):
+				unbrake();
+				Set_Direction(!CLOCKWISE);
+				Set_Speed(SPEED);
+				while(count < 1000);
+				Set_Speed(0);
+				brake();
+				break;
+			case(STOP):
+				break;
+			default:
+				break;
+			}			
 		}
+
+
+
 
 	}	
   return 0;

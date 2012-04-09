@@ -20,8 +20,6 @@ public class Runner {
 		logs.add(statusLogger);
 		logs.add(errorLogger);
 		netListener.setLoggers(logs);
-		
-		
 		netListener.start();
 		
 		TestThread tt = new TestThread("127.0.0.1", 12351);

@@ -55,7 +55,6 @@ public class TestThread extends Thread{
 					}
 					c++;
 				} catch (InterruptedException e) {
-					System.out.println("nnnnnnnnnnnnnnnnnnnnnn");
 					return;
 				}
 				

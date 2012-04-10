@@ -27,6 +27,7 @@ public class NetworkListener extends Thread implements SBModule {
 	private ServerSocket ss;
 	private final int NUM_CONNECTIONS = 10;
 	private LogCollection logs;
+	private boolean cont;
 	
 	/**
 	 * Creates a Network Listener on the specified port
@@ -37,6 +38,7 @@ public class NetworkListener extends Thread implements SBModule {
 		this.port = port;
 		reports = new ArrayList<ReporterI>();
 		clearLoggers();		
+		cont = true;
 	}
 	
 	
@@ -58,42 +60,68 @@ public class NetworkListener extends Thread implements SBModule {
 	 */
 	public void run()
 	{
-		Socket connection;
-		ObjectInputStream in;
-		
-		// Tries to listen to new connections on the port specified in the constructor
-		try
-		{
-			ss = new ServerSocket(port, NUM_CONNECTIONS);
-			// The port has successfully been opened
-			report("SphereServer running");
-			
-			connection = ss.accept();
-			// A remote client has successfully connected on this port
-			report("SphereServer received an incoming connection from: " + connection.getInetAddress().getHostAddress());
-			in = new ObjectInputStream(connection.getInputStream());
-		}
-		catch(IOException e)
-		{
-			reportError(e.getMessage(), e.getStackTrace());
-			
-			// If the flow of execution reaches this point, there is no way to control the robot, and therefore the program
-			// must stop.
-			return;
-		}
-		String message = "";
-		while(!message.equals("quit"))
-		{
+
+			report("Waiting for ping on port 59429");
+			ServerSocket pingServer;
 			try {
-					// Listens for a message to be sent
-					message = (String)in.readObject();
-					report(message);
-				} catch (ClassNotFoundException | IOException e) {
+				pingServer = new ServerSocket(59429,1);
+				pingServer.accept();
+				pingServer.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	
+			report("Ping received");
+			
+
+			Socket connection = null;
+			ObjectInputStream in = null;
+			do
+			{
+				// Tries to listen to new connections on the port specified in the constructor
+				try
+				{
+					ss = new ServerSocket(port, NUM_CONNECTIONS);
+					// The port has successfully been opened
+					report("SphereServer running");
+					report("Listening on port " + port);
+					connection = ss.accept();
+					// A remote client has successfully connected on this port
+					report("SphereServer received an incoming connection from: " + connection.getInetAddress().getHostAddress() + ":" + port);
+					in = new ObjectInputStream(connection.getInputStream());
+				}
+				catch(IOException e)
+				{
 					reportError(e.getMessage(), e.getStackTrace());
 					
+					// If the flow of execution reaches this point, there is no way to control the robot, and therefore the program
+					// must stop.
+					
 				}
+			}while(in == null);
+				
+			String message = "";
+			while(!message.equals("quit"))
+			{
+				try {
+						// Listens for a message to be sent
+						message = (String)in.readObject();
+						report(message);
+					} catch (ClassNotFoundException | IOException e) {
+						reportError(e.getMessage(), e.getStackTrace());
+						break;
+						
+					}
+			}
+			try {
+				connection.close();
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				reportError(e.getMessage(), e.getStackTrace());
+			}
 		}
-	}
 	
 	
 	/**

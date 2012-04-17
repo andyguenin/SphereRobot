@@ -410,11 +410,11 @@ int main( void )
   //Set_Speed(SPEED);
   DDR_MC = MC_MASK;        // Enable outputs
 
-  DDRB &= ~(1<<7); // limitswitch on input
-  DDRB |= 1<<6;
+  //DDRB &= ~(1<<7); // limitswitch on input
+  //DDRB |= 1<<6;
   Set_Speed(200);
   for(;;) {
-	
+	/*
 		if(PINB & 1<<7)
 		{
 			PORTB |= 1<<6;			
@@ -423,7 +423,7 @@ int main( void )
 		{
 			PORTB &= ~(1<<6);
 		}
-
+*/
 	}	
   return 0;
 }

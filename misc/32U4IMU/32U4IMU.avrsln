@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# AvrStudio Solution File, Format Version 11.00
+Project("{D1100916-62DA-4D80-A9B4-55A1E7CCEEB3}") = "32U4IMU", "32U4IMU\32U4IMU.avrgccproj", "{37AF9145-292C-455A-8277-DD8D1D6F9E12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37AF9145-292C-455A-8277-DD8D1D6F9E12}.Debug|AVR.ActiveCfg = Debug|AVR
+		{37AF9145-292C-455A-8277-DD8D1D6F9E12}.Debug|AVR.Build.0 = Debug|AVR
+		{37AF9145-292C-455A-8277-DD8D1D6F9E12}.Release|AVR.ActiveCfg = Release|AVR
+		{37AF9145-292C-455A-8277-DD8D1D6F9E12}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

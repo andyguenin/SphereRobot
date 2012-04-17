@@ -3,27 +3,27 @@ iotest.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000011e  00000000  00000000  00000054  2**1
+  0 .text         000000f8  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .stab         000006cc  00000000  00000000  00000174  2**2
+  1 .stab         000006cc  00000000  00000000  0000014c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  2 .stabstr      00000085  00000000  00000000  00000840  2**0
+  2 .stabstr      00000085  00000000  00000000  00000818  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_aranges 00000020  00000000  00000000  000008c5  2**0
+  3 .debug_aranges 00000020  00000000  00000000  0000089d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_pubnames 0000001b  00000000  00000000  000008e5  2**0
+  4 .debug_pubnames 0000001b  00000000  00000000  000008bd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000008f  00000000  00000000  00000900  2**0
+  5 .debug_info   0000008f  00000000  00000000  000008d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000004c  00000000  00000000  0000098f  2**0
+  6 .debug_abbrev 0000004c  00000000  00000000  00000967  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000000f6  00000000  00000000  000009db  2**0
+  7 .debug_line   000000e6  00000000  00000000  000009b3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000020  00000000  00000000  00000ad4  2**2
+  8 .debug_frame  00000020  00000000  00000000  00000a9c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000000b1  00000000  00000000  00000af4  2**0
+  9 .debug_str    000000b1  00000000  00000000  00000abc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_pubtypes 0000001e  00000000  00000000  00000ba5  2**0
+ 10 .debug_pubtypes 0000001e  00000000  00000000  00000b6d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -81,7 +81,7 @@ Disassembly of section .text:
   b4:	de bf       	out	0x3e, r29	; 62
   b6:	cd bf       	out	0x3d, r28	; 61
   b8:	0e 94 62 00 	call	0xc4	; 0xc4 <main>
-  bc:	0c 94 8d 00 	jmp	0x11a	; 0x11a <_exit>
+  bc:	0c 94 7a 00 	jmp	0xf4	; 0xf4 <_exit>
 
 000000c0 <__bad_interrupt>:
   c0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -97,60 +97,34 @@ int main()
   c6:	cf 93       	push	r28
   c8:	cd b7       	in	r28, 0x3d	; 61
   ca:	de b7       	in	r29, 0x3e	; 62
-			set(PORTD, 5);
-		else
-			clear(PORTD, 5);
-	}*/
-	
-	set(DDRD, 4);
+	set(DDRD,7);
   cc:	8a e2       	ldi	r24, 0x2A	; 42
   ce:	90 e0       	ldi	r25, 0x00	; 0
   d0:	2a e2       	ldi	r18, 0x2A	; 42
   d2:	30 e0       	ldi	r19, 0x00	; 0
   d4:	f9 01       	movw	r30, r18
   d6:	20 81       	ld	r18, Z
-  d8:	20 61       	ori	r18, 0x10	; 16
+  d8:	20 68       	ori	r18, 0x80	; 128
   da:	fc 01       	movw	r30, r24
   dc:	20 83       	st	Z, r18
-	set(DDRD, 3);
-  de:	8a e2       	ldi	r24, 0x2A	; 42
-  e0:	90 e0       	ldi	r25, 0x00	; 0
-  e2:	2a e2       	ldi	r18, 0x2A	; 42
-  e4:	30 e0       	ldi	r19, 0x00	; 0
-  e6:	f9 01       	movw	r30, r18
-  e8:	20 81       	ld	r18, Z
-  ea:	28 60       	ori	r18, 0x08	; 8
-  ec:	fc 01       	movw	r30, r24
-  ee:	20 83       	st	Z, r18
 	while(1)
 	{
-		toggle(PORTD, 3);
-  f0:	8b e2       	ldi	r24, 0x2B	; 43
-  f2:	90 e0       	ldi	r25, 0x00	; 0
-  f4:	2b e2       	ldi	r18, 0x2B	; 43
-  f6:	30 e0       	ldi	r19, 0x00	; 0
-  f8:	f9 01       	movw	r30, r18
-  fa:	30 81       	ld	r19, Z
-  fc:	28 e0       	ldi	r18, 0x08	; 8
-  fe:	23 27       	eor	r18, r19
- 100:	fc 01       	movw	r30, r24
- 102:	20 83       	st	Z, r18
-		toggle(PORTD, 4);
- 104:	8b e2       	ldi	r24, 0x2B	; 43
- 106:	90 e0       	ldi	r25, 0x00	; 0
- 108:	2b e2       	ldi	r18, 0x2B	; 43
- 10a:	30 e0       	ldi	r19, 0x00	; 0
- 10c:	f9 01       	movw	r30, r18
- 10e:	30 81       	ld	r19, Z
- 110:	20 e1       	ldi	r18, 0x10	; 16
- 112:	23 27       	eor	r18, r19
- 114:	fc 01       	movw	r30, r24
- 116:	20 83       	st	Z, r18
-	}
- 118:	eb cf       	rjmp	.-42     	; 0xf0 <main+0x2c>
+		toggle(PORTD, 7);		
+  de:	8b e2       	ldi	r24, 0x2B	; 43
+  e0:	90 e0       	ldi	r25, 0x00	; 0
+  e2:	2b e2       	ldi	r18, 0x2B	; 43
+  e4:	30 e0       	ldi	r19, 0x00	; 0
+  e6:	f9 01       	movw	r30, r18
+  e8:	30 81       	ld	r19, Z
+  ea:	20 e8       	ldi	r18, 0x80	; 128
+  ec:	23 27       	eor	r18, r19
+  ee:	fc 01       	movw	r30, r24
+  f0:	20 83       	st	Z, r18
+	}	
+  f2:	f5 cf       	rjmp	.-22     	; 0xde <main+0x1a>
 
-0000011a <_exit>:
- 11a:	f8 94       	cli
+000000f4 <_exit>:
+  f4:	f8 94       	cli
 
-0000011c <__stop_program>:
- 11c:	ff cf       	rjmp	.-2      	; 0x11c <__stop_program>
+000000f6 <__stop_program>:
+  f6:	ff cf       	rjmp	.-2      	; 0xf6 <__stop_program>

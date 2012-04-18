@@ -24,10 +24,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
+#include "i2c.h"
 
-#define SPEED 120
-volatile int enabled = 0;
-volatile int change = 0;
+#define ADDRESS 5
 
 void Set_Speed(unsigned char speed);
 void Set_Direction(unsigned char direction);
@@ -128,9 +127,9 @@ register union _fastTemp{
 	
 register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
-register unsigned char count asm("r10");
+//register unsigned char count asm("r10");
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-//unsigned char count = 100;
+unsigned int count = 100;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -191,6 +190,7 @@ void brake()
 	cli();
 	PCICR &= ~(1<<PCIE0);
 	sei();
+	PORTD &= ~(148);
 }
 
 void unbrake()
@@ -200,38 +200,6 @@ void unbrake()
 	sei();
 }
 
-// MATLAB motor direction control interrupt
-ISR(PCINT1_vect)
-{
-	short int dir = (PINC & 12)>>2;
-	return;
-	switch(dir)
-	{
-		case 0:
-			//stop
-			Set_Speed(0);
-			//brake();
-			break;
-		case 1:
-			//down
-			//unbrake();
-			Set_Direction(!CLOCKWISE);
-			Set_Speed(SPEED);
-			break;
-		case 2:
-			//up
-			//unbrake();
-			Set_Direction(CLOCKWISE);
-			Set_Speed(SPEED);
-			break;
-	}
-}
-
-void Init_MC_pin_control_interrupt() 
-{
-	PCICR |= 1<<PCIE1;	
-	PCMSK1 = (1<<PCINT10)|(1<<PCINT11);
-}
 
 
 /*! \brief  Start an AD conversion and return result.
@@ -387,11 +355,6 @@ int main( void )
 {
   CLKPR = (1<<CLKPCE); 
   CLKPR=0x00;
-  unsigned char speed = 20;
-  unsigned char setspeed = 0;
-  signed int current;
-  count = 200;
-  enabled = 0;
   MCUCR |= (1<<PUD);  // Disable all pull-ups
   hallMask = HALL_MASK; // Initialize hallMask variable
   //Set initial direction.
@@ -399,32 +362,59 @@ int main( void )
 
   Init_MC_timers();
   Init_MC_pin_change_interrupt();
-  Init_MC_pin_control_interrupt();
-  Init_ADC();
+  init_i2c_slave_receiver(ADDRESS, 0, 1);
 
   DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
   PORT_HALL |= HALL_MASK;
   PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
   DDR_HALL &= ~HALL_MASK;
   sei();
-  //Set_Speed(SPEED);
+  
   DDR_MC = MC_MASK;        // Enable outputs
 
-  //DDRB &= ~(1<<7); // limitswitch on input
-  //DDRB |= 1<<6;
-  Set_Speed(200);
+  DDRB &= ~(1<<7); // limitswitch on input
+  
+  
+  
+  char enabled = 0;
+  count = 0;
+  Set_Speed(0);
+  brake();
+  
   for(;;) {
-	/*
-		if(PINB & 1<<7)
-		{
-			PORTB |= 1<<6;			
-		}	  
-		else
-		{
-			PORTB &= ~(1<<6);
-		}
-*/
-	}	
-  return 0;
+	  if(command_ready())
+	  {
+		  char* m_c = command();
+		  switch(m_c[0])
+		  {
+			case(CALIBRATE):
+				unbrake();
+				Set_Direction(COUNTERCLOCKWISE);
+				Set_Speed(20);
+				while(!(PINB & (1<<7)));
+				count = 0;
+				Set_Speed(0);
+				brake();				
+				break;
+		  }
+		  
+		  unbrake();
+		  Set_Speed(10);
+		  
+	  }
+	  
+	  
+	  
+	  
+	  if(PINB & (1<<7))
+	  {
+		  enabled = 0;
+		  Set_Speed(0);
+		  brake();
+	  }	  
+  }	  
+	  		
 }
+
+
 

@@ -1,0 +1,439 @@
+
+32u4finaltest.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000029c  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_aranges 00000020  00000000  00000000  000002f0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_pubnames 0000004e  00000000  00000000  00000310  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   0000013a  00000000  00000000  0000035e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 000000be  00000000  00000000  00000498  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   000002cc  00000000  00000000  00000556  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000050  00000000  00000000  00000824  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000000d2  00000000  00000000  00000874  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    00000065  00000000  00000000  00000946  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 56 00 	jmp	0xac	; 0xac <__ctors_end>
+   4:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+   8:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+   c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  10:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  14:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  18:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  1c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  20:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  24:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  28:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  2c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  30:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  34:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  38:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  3c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  40:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  44:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  48:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  4c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  50:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  54:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  58:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  5c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  60:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  64:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  68:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  6c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  70:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  74:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  78:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  7c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  80:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  84:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  88:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  8c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  90:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  94:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  98:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  9c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a0:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a4:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a8:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+
+000000ac <__ctors_end>:
+  ac:	11 24       	eor	r1, r1
+  ae:	1f be       	out	0x3f, r1	; 63
+  b0:	cf ef       	ldi	r28, 0xFF	; 255
+  b2:	da e0       	ldi	r29, 0x0A	; 10
+  b4:	de bf       	out	0x3e, r29	; 62
+  b6:	cd bf       	out	0x3d, r28	; 61
+  b8:	0e 94 b5 00 	call	0x16a	; 0x16a <main>
+  bc:	0c 94 4c 01 	jmp	0x298	; 0x298 <_exit>
+
+000000c0 <__bad_interrupt>:
+  c0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000c4 <init>:
+	m_usb_tx_int(a);
+	m_usb_tx_push();
+}*/
+char init()
+{
+	m_clockdivide(0);
+  c4:	80 e8       	ldi	r24, 0x80	; 128
+  c6:	80 93 61 00 	sts	0x0061, r24
+  ca:	10 92 61 00 	sts	0x0061, r1
+	
+	// ENABLE PULLUPS
+	set(PORTD,0);
+  ce:	58 9a       	sbi	0x0b, 0	; 11
+	set(PORTD,1);
+  d0:	59 9a       	sbi	0x0b, 1	; 11
+	set(PORTD,2);
+  d2:	5a 9a       	sbi	0x0b, 2	; 11
+	
+	// CONFIGURE THE CLOCK
+	TWBR = 12;	// CLK freq = CPU clock / (16 + 2*TWBR*(4^TWPS)), 16MHz clock, TWBR=12, TWPS=00 -> 400kHz
+  d4:	8c e0       	ldi	r24, 0x0C	; 12
+  d6:	80 93 b8 00 	sts	0x00B8, r24
+
+	// ENABLE interrupts in INT2 (D2)
+	set(EICRA,ISC21); clear(EICRA,ISC20); // trigger on falling edge
+  da:	80 91 69 00 	lds	r24, 0x0069
+  de:	80 62       	ori	r24, 0x20	; 32
+  e0:	80 93 69 00 	sts	0x0069, r24
+  e4:	80 91 69 00 	lds	r24, 0x0069
+  e8:	8f 7e       	andi	r24, 0xEF	; 239
+  ea:	80 93 69 00 	sts	0x0069, r24
+	set(EIMSK,INT2); // demask the interrupt
+  ee:	ea 9a       	sbi	0x1d, 2	; 29
+	sei(); // enable global interrupts
+  f0:	78 94       	sei
+
+	m_red(ON);
+  f2:	6e 9a       	sbi	0x0d, 6	; 13
+  f4:	76 98       	cbi	0x0e, 6	; 14
+  f6:	90 e0       	ldi	r25, 0x00	; 0
+	
+	for(int i = 0; i < 128; i++)
+	{
+		TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
+  f8:	44 ea       	ldi	r20, 0xA4	; 164
+		while(!(TWCR & (1<<TWINT))){};
+		// ADDRESS
+		TWDR = i<<1;
+		TWCR = (1<<TWINT) | (1<<TWEN);
+  fa:	34 e8       	ldi	r19, 0x84	; 132
+		while(!(TWCR & (1<<TWINT))){};
+		if((TWSR & 0xF8) != 0x18){ // ACK was not received - may not be connected/listening
+			TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+  fc:	24 e9       	ldi	r18, 0x94	; 148
+
+	m_red(ON);
+	
+	for(int i = 0; i < 128; i++)
+	{
+		TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
+  fe:	40 93 bc 00 	sts	0x00BC, r20
+		while(!(TWCR & (1<<TWINT))){};
+ 102:	80 91 bc 00 	lds	r24, 0x00BC
+ 106:	87 ff       	sbrs	r24, 7
+ 108:	fc cf       	rjmp	.-8      	; 0x102 <init+0x3e>
+		// ADDRESS
+		TWDR = i<<1;
+ 10a:	89 2f       	mov	r24, r25
+ 10c:	88 0f       	add	r24, r24
+ 10e:	80 93 bb 00 	sts	0x00BB, r24
+		TWCR = (1<<TWINT) | (1<<TWEN);
+ 112:	30 93 bc 00 	sts	0x00BC, r19
+		while(!(TWCR & (1<<TWINT))){};
+ 116:	80 91 bc 00 	lds	r24, 0x00BC
+ 11a:	87 ff       	sbrs	r24, 7
+ 11c:	fc cf       	rjmp	.-8      	; 0x116 <init+0x52>
+		if((TWSR & 0xF8) != 0x18){ // ACK was not received - may not be connected/listening
+ 11e:	80 91 b9 00 	lds	r24, 0x00B9
+ 122:	88 7f       	andi	r24, 0xF8	; 248
+ 124:	88 31       	cpi	r24, 0x18	; 24
+ 126:	29 f0       	breq	.+10     	; 0x132 <init+0x6e>
+			TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 128:	20 93 bc 00 	sts	0x00BC, r18
+ 12c:	9f 5f       	subi	r25, 0xFF	; 255
+	set(EIMSK,INT2); // demask the interrupt
+	sei(); // enable global interrupts
+
+	m_red(ON);
+	
+	for(int i = 0; i < 128; i++)
+ 12e:	90 38       	cpi	r25, 0x80	; 128
+ 130:	31 f7       	brne	.-52     	; 0xfe <init+0x3a>
+		{
+			break;
+		}
+	}
+
+	m_green(ON);
+ 132:	6a 9a       	sbi	0x0d, 2	; 13
+ 134:	72 98       	cbi	0x0e, 2	; 14
+	// send the register address
+	TWDR = 0;
+ 136:	10 92 bb 00 	sts	0x00BB, r1
+		
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 13a:	84 e8       	ldi	r24, 0x84	; 132
+ 13c:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 140:	80 91 bc 00 	lds	r24, 0x00BC
+ 144:	87 ff       	sbrs	r24, 7
+ 146:	fc cf       	rjmp	.-8      	; 0x140 <init+0x7c>
+	if((TWSR & 0xF8) != 0x28){ // ACK was not received - may not be connected/listening
+ 148:	80 91 b9 00 	lds	r24, 0x00B9
+ 14c:	88 7f       	andi	r24, 0xF8	; 248
+ 14e:	88 32       	cpi	r24, 0x28	; 40
+ 150:	29 f0       	breq	.+10     	; 0x15c <init+0x98>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 152:	84 e9       	ldi	r24, 0x94	; 148
+ 154:	80 93 bc 00 	sts	0x00BC, r24
+ 158:	80 e0       	ldi	r24, 0x00	; 0
+ 15a:	08 95       	ret
+		return 0;
+	}
+	
+	TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 15c:	84 e9       	ldi	r24, 0x94	; 148
+ 15e:	80 93 bc 00 	sts	0x00BC, r24
+	m_red(ON);
+ 162:	6e 9a       	sbi	0x0d, 6	; 13
+ 164:	76 98       	cbi	0x0e, 6	; 14
+ 166:	81 e0       	ldi	r24, 0x01	; 1
+	return 1;
+	
+}
+ 168:	08 95       	ret
+
+0000016a <main>:
+char init(void);
+void write(int);
+
+int main(void)
+{
+	init();
+ 16a:	0e 94 62 00 	call	0xc4	; 0xc4 <init>
+
+}
+ 16e:	80 e0       	ldi	r24, 0x00	; 0
+ 170:	90 e0       	ldi	r25, 0x00	; 0
+ 172:	08 95       	ret
+
+00000174 <set_register_val>:
+	m_red(ON);
+	return 1;
+	
+}
+char set_register_val(char address, char reg, char val)
+{
+ 174:	98 2f       	mov	r25, r24
+	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
+ 176:	84 ea       	ldi	r24, 0xA4	; 164
+ 178:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 17c:	80 91 bc 00 	lds	r24, 0x00BC
+ 180:	87 ff       	sbrs	r24, 7
+ 182:	fc cf       	rjmp	.-8      	; 0x17c <set_register_val+0x8>
+	
+	// ADDRESS
+	TWDR = address<<1;
+ 184:	99 0f       	add	r25, r25
+ 186:	90 93 bb 00 	sts	0x00BB, r25
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 18a:	84 e8       	ldi	r24, 0x84	; 132
+ 18c:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 190:	80 91 bc 00 	lds	r24, 0x00BC
+ 194:	87 ff       	sbrs	r24, 7
+ 196:	fc cf       	rjmp	.-8      	; 0x190 <set_register_val+0x1c>
+	if((TWSR & 0xF8) != 0x18){ // ACK was not received - may not be connected/listening
+ 198:	80 91 b9 00 	lds	r24, 0x00B9
+ 19c:	88 7f       	andi	r24, 0xF8	; 248
+ 19e:	88 31       	cpi	r24, 0x18	; 24
+ 1a0:	e1 f4       	brne	.+56     	; 0x1da <set_register_val+0x66>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;
+	}
+	// send the register address
+	TWDR = reg;
+ 1a2:	60 93 bb 00 	sts	0x00BB, r22
+		
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 1a6:	84 e8       	ldi	r24, 0x84	; 132
+ 1a8:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 1ac:	80 91 bc 00 	lds	r24, 0x00BC
+ 1b0:	87 ff       	sbrs	r24, 7
+ 1b2:	fc cf       	rjmp	.-8      	; 0x1ac <set_register_val+0x38>
+	if((TWSR & 0xF8) != 0x28){ // ACK was not received - may not be connected/listening
+ 1b4:	80 91 b9 00 	lds	r24, 0x00B9
+ 1b8:	88 7f       	andi	r24, 0xF8	; 248
+ 1ba:	88 32       	cpi	r24, 0x28	; 40
+ 1bc:	71 f4       	brne	.+28     	; 0x1da <set_register_val+0x66>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;
+	}
+	
+	TWDR = val;
+ 1be:	40 93 bb 00 	sts	0x00BB, r20
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 1c2:	84 e8       	ldi	r24, 0x84	; 132
+ 1c4:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 1c8:	80 91 bc 00 	lds	r24, 0x00BC
+ 1cc:	87 ff       	sbrs	r24, 7
+ 1ce:	fc cf       	rjmp	.-8      	; 0x1c8 <set_register_val+0x54>
+	if((TWSR & 0xF8) != 0x28){ // ACK was not received - may not be connected/listening
+ 1d0:	80 91 b9 00 	lds	r24, 0x00B9
+ 1d4:	88 7f       	andi	r24, 0xF8	; 248
+ 1d6:	88 32       	cpi	r24, 0x28	; 40
+ 1d8:	29 f0       	breq	.+10     	; 0x1e4 <set_register_val+0x70>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 1da:	84 e9       	ldi	r24, 0x94	; 148
+ 1dc:	80 93 bc 00 	sts	0x00BC, r24
+ 1e0:	80 e0       	ldi	r24, 0x00	; 0
+ 1e2:	08 95       	ret
+		return 0;
+	}
+	
+	TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 1e4:	84 e9       	ldi	r24, 0x94	; 148
+ 1e6:	80 93 bc 00 	sts	0x00BC, r24
+ 1ea:	81 e0       	ldi	r24, 0x01	; 1
+	return 1;	
+}
+ 1ec:	08 95       	ret
+
+000001ee <get_register_val>:
+
+char get_register_val(char address, char reg)
+{
+ 1ee:	98 2f       	mov	r25, r24
+	char data = 0;
+		
+	TWCR = (1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
+ 1f0:	84 ea       	ldi	r24, 0xA4	; 164
+ 1f2:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 1f6:	80 91 bc 00 	lds	r24, 0x00BC
+ 1fa:	87 ff       	sbrs	r24, 7
+ 1fc:	fc cf       	rjmp	.-8      	; 0x1f6 <get_register_val+0x8>
+	
+	// ADDRESS
+	TWDR = address<<1;
+ 1fe:	89 2f       	mov	r24, r25
+ 200:	88 0f       	add	r24, r24
+ 202:	80 93 bb 00 	sts	0x00BB, r24
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 206:	84 e8       	ldi	r24, 0x84	; 132
+ 208:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 20c:	80 91 bc 00 	lds	r24, 0x00BC
+ 210:	87 ff       	sbrs	r24, 7
+ 212:	fc cf       	rjmp	.-8      	; 0x20c <get_register_val+0x1e>
+	if((TWSR & 0xF8) != 0x18){ // ACK was not received - may not be connected/listening
+ 214:	80 91 b9 00 	lds	r24, 0x00B9
+ 218:	88 7f       	andi	r24, 0xF8	; 248
+ 21a:	88 31       	cpi	r24, 0x18	; 24
+ 21c:	89 f5       	brne	.+98     	; 0x280 <get_register_val+0x92>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;
+	}
+	// send the register address
+	TWDR = reg;
+ 21e:	60 93 bb 00 	sts	0x00BB, r22
+		
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 222:	84 e8       	ldi	r24, 0x84	; 132
+ 224:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 228:	80 91 bc 00 	lds	r24, 0x00BC
+ 22c:	87 ff       	sbrs	r24, 7
+ 22e:	fc cf       	rjmp	.-8      	; 0x228 <get_register_val+0x3a>
+	if((TWSR & 0xF8) != 0x28){ // ACK was not received - may not be connected/listening
+ 230:	80 91 b9 00 	lds	r24, 0x00B9
+ 234:	88 7f       	andi	r24, 0xF8	; 248
+ 236:	88 32       	cpi	r24, 0x28	; 40
+ 238:	19 f5       	brne	.+70     	; 0x280 <get_register_val+0x92>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;
+	}
+	// send repeat address and enter master receiver mode
+	TWCR = (1<<TWSTA) | (1<<TWINT) | (1<<TWEN);
+ 23a:	84 ea       	ldi	r24, 0xA4	; 164
+ 23c:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 240:	80 91 bc 00 	lds	r24, 0x00BC
+ 244:	87 ff       	sbrs	r24, 7
+ 246:	fc cf       	rjmp	.-8      	; 0x240 <get_register_val+0x52>
+			
+			
+	TWDR = 	(address << 1) | 1;
+ 248:	99 0f       	add	r25, r25
+ 24a:	91 60       	ori	r25, 0x01	; 1
+ 24c:	90 93 bb 00 	sts	0x00BB, r25
+	TWCR = (1<<TWINT) | (1<<TWEN);
+ 250:	84 e8       	ldi	r24, 0x84	; 132
+ 252:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 256:	80 91 bc 00 	lds	r24, 0x00BC
+ 25a:	87 ff       	sbrs	r24, 7
+ 25c:	fc cf       	rjmp	.-8      	; 0x256 <get_register_val+0x68>
+	if((TWSR & 0xF8) != 0x40){ // ACK was not received - may not be connected/listening
+ 25e:	80 91 b9 00 	lds	r24, 0x00B9
+ 262:	88 7f       	andi	r24, 0xF8	; 248
+ 264:	80 34       	cpi	r24, 0x40	; 64
+ 266:	61 f4       	brne	.+24     	; 0x280 <get_register_val+0x92>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+		return 0;
+	}
+		
+	TWCR = (1<<TWINT) | (0<<TWEA) | (1<<TWEN);
+ 268:	84 e8       	ldi	r24, 0x84	; 132
+ 26a:	80 93 bc 00 	sts	0x00BC, r24
+	while(!(TWCR & (1<<TWINT))){};
+ 26e:	80 91 bc 00 	lds	r24, 0x00BC
+ 272:	87 ff       	sbrs	r24, 7
+ 274:	fc cf       	rjmp	.-8      	; 0x26e <get_register_val+0x80>
+	if((TWSR & 0xF8) != 0x58){ // ACK was not received - may not be connected/listening
+ 276:	80 91 b9 00 	lds	r24, 0x00B9
+ 27a:	88 7f       	andi	r24, 0xF8	; 248
+ 27c:	88 35       	cpi	r24, 0x58	; 88
+ 27e:	29 f0       	breq	.+10     	; 0x28a <get_register_val+0x9c>
+		TWCR = (1<<TWINT)|(1<<TWEN)| (1<<TWSTO); // let go of the line (STOP)
+ 280:	84 e9       	ldi	r24, 0x94	; 148
+ 282:	80 93 bc 00 	sts	0x00BC, r24
+ 286:	90 e0       	ldi	r25, 0x00	; 0
+ 288:	05 c0       	rjmp	.+10     	; 0x294 <get_register_val+0xa6>
+		return 0;
+	}		
+		
+	data = TWDR;
+ 28a:	90 91 bb 00 	lds	r25, 0x00BB
+	TWCR = (1<<TWSTO) | (1<<TWINT) | (1<<TWEN);	
+ 28e:	84 e9       	ldi	r24, 0x94	; 148
+ 290:	80 93 bc 00 	sts	0x00BC, r24
+	return data;	
+}
+ 294:	89 2f       	mov	r24, r25
+ 296:	08 95       	ret
+
+00000298 <_exit>:
+ 298:	f8 94       	cli
+
+0000029a <__stop_program>:
+ 29a:	ff cf       	rjmp	.-2      	; 0x29a <__stop_program>

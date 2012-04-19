@@ -25,6 +25,7 @@
 #include <avr/interrupt.h>
 #include "sensor_three_phase_BLDC.h"
 #include "i2c.h"
+#include <avr/wdt.h>
 
 #define ADDRESS 1
 
@@ -207,29 +208,12 @@ void unbrake()
 	cli();
 	PCICR |= (1<<PCIE0);
 	sei();
+	DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
+	PORT_HALL |= HALL_MASK;
+	PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
+	DDR_HALL &= ~HALL_MASK;
 }
 
-
-
-/*! \brief  Start an AD conversion and return result.
- *
- * Starts an AD conversion on the specified ADC channel and returns
- * the result when the conversion is completed. Uses polling to wait for
- * the AD conversion to complete.
- *
- *  \param channel Specify the ADMUX register settings to access the correct channel.
- *
- *  \return adcResult 8-bit result (high byte of AD conversion).
- */
-unsigned char Get_ADC8(unsigned char muxSetting)
-{
-    ADMUX = muxSetting;
-    // Start AD conversion.
-    ADCSRA |= (1 << ADSC);
-    // Wait for ADC conversion to complete.
-    while ( ADCSRA & (1 << ADSC) );
-    return ADCH;
-}
 
 
 //!
@@ -371,33 +355,45 @@ int main( void )
 	DDRB &= ~(1<<7); // limitswitch on input
   
   
-	brake();
 	Set_Speed(0);
+	//brake();
+	
   
 	count = 0;
+	wdt_reset();
+	wdt_enable(WDTO_1S);
 	while(1)
 	{
-		char* m_c = command();
-		switch(m_c[0])
+		wdt_reset();
+		if(command_ready())
 		{
-			case CALIBRATE:
-				unbrake();
-				Set_Direction(COUNTERCLOCKWISE);
-				Set_Speed(150);
-				
-			break;
-			case IN:
-				unbrake();
-				Set_Direction(CLOCKWISE);
-				Set_Speed(150);
-			break;
-			case OUT:
-				Set_Speed(0);
-				brake();
-			break;
+			char* m_c = command();
+			switch(m_c[0])
+			{
+				case 0:
+					Set_Direction(COUNTERCLOCKWISE);
+					Set_Speed(150);
+				/*	unbrake();
+					Set_Direction(COUNTERCLOCKWISE);
+					Set_Speed(150);*/
+					break;
+				case 1:
+					Set_Direction(CLOCKWISE);
+					Set_Speed(150);
+					/*unbrake();
+					Set_Direction(CLOCKWISE);
+					Set_Speed(150);*/
+					break;
+				case 2:
+					Set_Speed(0);
+				//	brake();
+					break;
+				default:
+					break;
 			
-		}
-		
+			}
+
+		}				
 	}
 	
 	/*

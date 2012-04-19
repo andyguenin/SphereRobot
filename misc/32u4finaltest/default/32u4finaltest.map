@@ -2,6 +2,24 @@ Archive member included because of file (symbol)
 
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o (exit)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+                              m_usb.o (__do_copy_data)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                              m_usb.o (__do_clear_bss)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o)
+                              m_usb.o (itoa)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o)
+                              m_usb.o (ltoa)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa.o)
+                              m_usb.o (ultoa)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(utoa.o)
+                              m_usb.o (utoa)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strrev.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o) (strrev)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o) (__udivmodhi4)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o) (__udivmodsi4)
 
 Memory Configuration
 
@@ -20,6 +38,7 @@ Address of section .data set to 0x800100
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
 LOAD 32u4finaltest.o
 LOAD 32U4IMU.o
+LOAD m_usb.o
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
@@ -114,44 +133,52 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x29c
+.text           0x00000000     0x106a
  *(.vectors)
  .vectors       0x00000000       0xac c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
                 0x00000000                __vectors
                 0x00000000                __vector_default
  *(.vectors)
  *(.progmem.gcc*)
+ .progmem.gcc_sw_table
+                0x000000ac       0x82 m_usb.o
  *(.progmem*)
-                0x000000ac                . = ALIGN (0x2)
-                0x000000ac                __trampolines_start = .
+ .progmem.data  0x0000012e       0xb3 m_usb.o
+                0x000001e2                . = ALIGN (0x2)
+ *fill*         0x000001e1        0x1 00
+                0x000001e2                __trampolines_start = .
  *(.trampolines)
- .trampolines   0x000000ac        0x0 linker stubs
+ .trampolines   0x000001e2        0x0 linker stubs
  *(.trampolines*)
-                0x000000ac                __trampolines_end = .
+                0x000001e2                __trampolines_end = .
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
  *(.lowtext*)
-                0x000000ac                __ctors_start = .
+                0x000001e2                __ctors_start = .
  *(.ctors)
-                0x000000ac                __ctors_end = .
-                0x000000ac                __dtors_start = .
+                0x000001e2                __ctors_end = .
+                0x000001e2                __dtors_start = .
  *(.dtors)
-                0x000000ac                __dtors_end = .
+                0x000001e2                __dtors_end = .
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x000000ac        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
-                0x000000ac                __init
+ .init0         0x000001e2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
+                0x000001e2                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x000000ac        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
+ .init2         0x000001e2        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
+ .init4         0x000001ee       0x16 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+                0x000001ee                __do_copy_data
+ .init4         0x00000204       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x00000204                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -162,68 +189,124 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x000000b8        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
+ .init9         0x00000214        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
  *(.init9)
  *(.text)
- .text          0x000000c0        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
-                0x000000c0                __vector_38
-                0x000000c0                __vector_22
-                0x000000c0                __vector_28
-                0x000000c0                __vector_1
-                0x000000c0                __vector_32
-                0x000000c0                __vector_34
-                0x000000c0                __vector_24
-                0x000000c0                __vector_12
-                0x000000c0                __bad_interrupt
-                0x000000c0                __vector_6
-                0x000000c0                __vector_31
-                0x000000c0                __vector_35
-                0x000000c0                __vector_39
-                0x000000c0                __vector_3
-                0x000000c0                __vector_23
-                0x000000c0                __vector_30
-                0x000000c0                __vector_25
-                0x000000c0                __vector_11
-                0x000000c0                __vector_13
-                0x000000c0                __vector_17
-                0x000000c0                __vector_19
-                0x000000c0                __vector_7
-                0x000000c0                __vector_41
-                0x000000c0                __vector_27
-                0x000000c0                __vector_5
-                0x000000c0                __vector_33
-                0x000000c0                __vector_37
-                0x000000c0                __vector_4
-                0x000000c0                __vector_9
-                0x000000c0                __vector_2
-                0x000000c0                __vector_21
-                0x000000c0                __vector_15
-                0x000000c0                __vector_36
-                0x000000c0                __vector_29
-                0x000000c0                __vector_40
-                0x000000c0                __vector_8
-                0x000000c0                __vector_26
-                0x000000c0                __vector_14
-                0x000000c0                __vector_10
-                0x000000c0                __vector_16
-                0x000000c0                __vector_18
-                0x000000c0                __vector_20
-                0x000000c0                __vector_42
- .text          0x000000c4        0x0 32u4finaltest.o
- .text          0x000000c4      0x1d4 32U4IMU.o
-                0x000001ee                get_register_val
-                0x000000c4                init
-                0x0000016a                main
-                0x00000174                set_register_val
- .text          0x00000298        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000298                . = ALIGN (0x2)
+ .text          0x0000021c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
+                0x0000021c                __vector_38
+                0x0000021c                __vector_22
+                0x0000021c                __vector_28
+                0x0000021c                __vector_1
+                0x0000021c                __vector_32
+                0x0000021c                __vector_34
+                0x0000021c                __vector_24
+                0x0000021c                __vector_12
+                0x0000021c                __bad_interrupt
+                0x0000021c                __vector_6
+                0x0000021c                __vector_31
+                0x0000021c                __vector_35
+                0x0000021c                __vector_39
+                0x0000021c                __vector_3
+                0x0000021c                __vector_23
+                0x0000021c                __vector_30
+                0x0000021c                __vector_25
+                0x0000021c                __vector_13
+                0x0000021c                __vector_17
+                0x0000021c                __vector_19
+                0x0000021c                __vector_7
+                0x0000021c                __vector_41
+                0x0000021c                __vector_27
+                0x0000021c                __vector_5
+                0x0000021c                __vector_33
+                0x0000021c                __vector_37
+                0x0000021c                __vector_4
+                0x0000021c                __vector_9
+                0x0000021c                __vector_2
+                0x0000021c                __vector_21
+                0x0000021c                __vector_15
+                0x0000021c                __vector_36
+                0x0000021c                __vector_29
+                0x0000021c                __vector_40
+                0x0000021c                __vector_8
+                0x0000021c                __vector_26
+                0x0000021c                __vector_14
+                0x0000021c                __vector_16
+                0x0000021c                __vector_18
+                0x0000021c                __vector_20
+                0x0000021c                __vector_42
+ .text          0x00000220        0x0 32u4finaltest.o
+ .text          0x00000220      0x2c2 32U4IMU.o
+                0x000002f8                get_register_val
+                0x000003a2                init
+                0x000004d8                main
+                0x0000027e                set_register_val
+                0x00000220                send_instruc
+ .text          0x000004e2      0x9d8 m_usb.o
+                0x00000cd6                phex
+                0x00000cc2                phex1
+                0x000008a6                m_usb_tx_push
+                0x00000c96                print_P
+                0x000008f0                usb_serial_set_control
+                0x000008e4                usb_serial_get_numbits
+                0x000009c0                __vector_11
+                0x000008c6                usb_serial_get_baud
+                0x00000d02                m_usb_tx_hexchar
+                0x0000056c                m_usb_rx_flush
+                0x00000d78                m_usb_tx_long
+                0x00000cee                m_usb_tx_hex
+                0x000008ea                usb_serial_get_control
+                0x00000d08                m_usb_tx_ulong
+                0x00000656                usb_serial_write
+                0x00000e50                m_usb_tx_int
+                0x00000de8                m_usb_tx_uint
+                0x00000592                m_usb_tx_char
+                0x00000514                m_usb_isconnected
+                0x0000051a                m_usb_rx_char
+                0x00000552                m_usb_rx_available
+                0x0000094a                __vector_10
+                0x000008d8                usb_serial_get_stopbits
+                0x000008de                usb_serial_get_paritytype
+                0x000004e2                m_usb_init
+                0x00000616                usb_serial_putchar_nowait
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(utoa.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strrev.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+ .text          0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
+                0x00000eba                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00000298        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000298                . = ALIGN (0x2)
+ .text.libgcc   0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000eba        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .text.avr-libc
+                0x00000eba       0x42 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o)
+                0x00000eba                itoa
+ .text.avr-libc
+                0x00000efc       0x68 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o)
+                0x00000efc                ltoa
+ .text.avr-libc
+                0x00000f64       0x4a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa.o)
+                0x00000f64                ultoa
+ .text.avr-libc
+                0x00000fae       0x2c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(utoa.o)
+                0x00000fae                utoa
+ .text.avr-libc
+                0x00000fda       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strrev.o)
+                0x00000fda                strrev
+ .text.libgcc   0x00000ffa       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+                0x00000ffa                __udivmodhi4
+ .text.libgcc   0x00001022       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
+                0x00001022                __udivmodsi4
+                0x00001066                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000298        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000298                exit
-                0x00000298                _exit
+ .fini9         0x00001066        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x00001066                exit
+                0x00001066                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -242,44 +325,65 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000298        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x00001066        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000029c                _etext = .
+                0x0000106a                _etext = .
 
-.data           0x00800100        0x0 load address 0x0000029c
+.data           0x00800100        0x8 load address 0x0000106a
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
  .data          0x00800100        0x0 32u4finaltest.o
  .data          0x00800100        0x0 32U4IMU.o
- .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .data          0x00800100        0x7 m_usb.o
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(utoa.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strrev.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+ .data          0x00800107        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x00800100                . = ALIGN (0x2)
-                0x00800100                _edata = .
-                0x00800100                PROVIDE (__data_end, .)
+                0x00800108                . = ALIGN (0x2)
+ *fill*         0x00800107        0x1 00
+                0x00800108                _edata = .
+                0x00800108                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x0
-                0x00800100                PROVIDE (__bss_start, .)
+.bss            0x00800108        0x4
+                0x00800108                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
- .bss           0x00800100        0x0 32u4finaltest.o
- .bss           0x00800100        0x0 32U4IMU.o
- .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800108        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm32u4.o
+ .bss           0x00800108        0x0 32u4finaltest.o
+ .bss           0x00800108        0x0 32U4IMU.o
+ .bss           0x00800108        0x4 m_usb.o
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(itoa.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ltoa.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(ultoa.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(utoa.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(strrev.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+ .bss           0x0080010c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodsi4.o)
  *(.bss*)
  *(COMMON)
-                0x00800100                PROVIDE (__bss_end, .)
-                0x0000029c                __data_load_start = LOADADDR (.data)
-                0x0000029c                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0080010c                PROVIDE (__bss_end, .)
+                0x0000106a                __data_load_start = LOADADDR (.data)
+                0x00001072                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800100        0x0
-                0x00800100                PROVIDE (__noinit_start, .)
+.noinit         0x0080010c        0x0
+                0x0080010c                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800100                PROVIDE (__noinit_end, .)
-                0x00800100                _end = .
-                0x00800100                PROVIDE (__heap_start, .)
+                0x0080010c                PROVIDE (__noinit_end, .)
+                0x0080010c                _end = .
+                0x0080010c                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -330,47 +434,62 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x20
+.debug_aranges  0x00000000       0x40
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 32U4IMU.o
+ .debug_aranges
+                0x00000020       0x20 m_usb.o
 
 .debug_pubnames
-                0x00000000       0x4e
+                0x00000000      0x279
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000       0x4e 32U4IMU.o
+                0x00000000       0x5f 32U4IMU.o
+ .debug_pubnames
+                0x0000005f      0x21a m_usb.o
 
-.debug_info     0x00000000      0x13a
+.debug_info     0x00000000      0xca4
  *(.debug_info)
  .debug_info    0x00000000        0x0 32u4finaltest.o
- .debug_info    0x00000000      0x13a 32U4IMU.o
+ .debug_info    0x00000000      0x1f0 32U4IMU.o
+ .debug_info    0x000001f0      0xab4 m_usb.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000       0xbe
+.debug_abbrev   0x00000000      0x2c2
  *(.debug_abbrev)
  .debug_abbrev  0x00000000        0x1 32u4finaltest.o
- .debug_abbrev  0x00000001       0xbd 32U4IMU.o
+ .debug_abbrev  0x00000001      0x10c 32U4IMU.o
+ .debug_abbrev  0x0000010d      0x1b5 m_usb.o
 
-.debug_line     0x00000000      0x2cc
+.debug_line     0x00000000     0x1002
  *(.debug_line)
  .debug_line    0x00000000       0x24 32u4finaltest.o
- .debug_line    0x00000024      0x2a8 32U4IMU.o
+ .debug_line    0x00000024      0x35e 32U4IMU.o
+ .debug_line    0x00000382      0xc80 m_usb.o
 
-.debug_frame    0x00000000       0x50
+.debug_frame    0x00000000      0x210
  *(.debug_frame)
- .debug_frame   0x00000000       0x50 32U4IMU.o
+ .debug_frame   0x00000000       0x60 32U4IMU.o
+ .debug_frame   0x00000060      0x1b0 m_usb.o
 
-.debug_str      0x00000000       0xd2
+.debug_str      0x00000000      0x4a2
  *(.debug_str)
- .debug_str     0x00000000       0xd2 32U4IMU.o
-                                0x10b (size before relaxing)
+ .debug_str     0x00000000       0xec 32U4IMU.o
+                                0x12f (size before relaxing)
+ .debug_str     0x000000ec      0x3b6 m_usb.o
+                                0x4a8 (size before relaxing)
 
-.debug_loc      0x00000000       0x65
+.debug_loc      0x00000000      0xca2
  *(.debug_loc)
- .debug_loc     0x00000000       0x65 32U4IMU.o
+ .debug_loc     0x00000000       0xe7 32U4IMU.o
+ .debug_loc     0x000000e7      0xbbb m_usb.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(32u4finaltest.elf elf32-avr)
 LOAD linker stubs
+
+.debug_ranges   0x00000000       0x48
+ .debug_ranges  0x00000000       0x30 32U4IMU.o
+ .debug_ranges  0x00000030       0x18 m_usb.o

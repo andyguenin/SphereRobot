@@ -26,12 +26,14 @@
 #include "sensor_three_phase_BLDC.h"
 #include "i2c.h"
 
-#define ADDRESS 5
+#define ADDRESS 1
 
 void Set_Speed(unsigned char speed);
 void Set_Direction(unsigned char direction);
 void brake();
 void unbrake();
+
+char current_direction = 0;
 
 /*! \brief CCW rotation patterns.
  *
@@ -129,7 +131,7 @@ register unsigned char hallMask asm("r11");
 //__regvar __no_init unsigned char hallMask @11; //!< Workaround for internal compiler error
 //register unsigned char count asm("r10");
 //__regvar __no_init unsigned char count @10; //!< Optimized variable decremented every pin change int.
-unsigned int count = 100;
+unsigned int count = 0;
 
 
 /*! \brief  Pin Change Interrupt Service Routine.
@@ -163,7 +165,14 @@ ISR(PCINT0_vect)
 
   TCCR0A = *(pTemp + PATTERN_COM0_OFFSET);    // Reconfigure output compare operation for T0
   TCCR2A = *(pTemp + PATTERN_COM2_OFFSET); // Reconfigure output compare operation for T2
-  count--;
+  if(current_direction == COUNTERCLOCKWISE)
+  {
+	  count--;
+  }
+  else
+  {
+	  count++;
+  }
  
 }
 
@@ -269,23 +278,6 @@ static void Init_MC_timers( void )
 
 
 
-/*! \brief Initialize ADC module.
- *
- * Sets up the ADC with prescaler value 4, which means a maximum sample speed
- * of CPU frequency divided by 52 (13*4). With the ADC measuring the speed set
- * point and shunt voltage, this gives a reaction time of two samples for
- * detecting over-current.
- *
- *  \param void
- *
- *  \return void
- */
-static void Init_ADC( void )
-{
-  ADCSRA = (1 << ADEN) | (1 << ADPS1); // Enable ADC, clock prescaler = 4
-}
-
-
 
 /*! \brief Set motor speed.
  *
@@ -325,18 +317,19 @@ void Set_Speed(unsigned char speed)
  */
 void Set_Direction(unsigned char direction)
 {
-  if(direction == CLOCKWISE)
-  {
-    cli();        //Variable also used in interrupt and access most be protected
-    pDrvPattern = drvPatternsCW;   // Set dir to CW, by pointing to CW pattern
-    sei();
-  }
-  else
-  {
-    cli();        //Variable also used in interrupt and access most be protected
-    pDrvPattern = drvPatternsCCW;   // Set dir to CCW, by pointing to CCW pattern
-    sei();
-  }
+	current_direction = direction;
+	if(direction == CLOCKWISE)
+	{
+		cli();        //Variable also used in interrupt and access most be protected
+		pDrvPattern = drvPatternsCW;   // Set dir to CW, by pointing to CW pattern
+		sei();
+	}
+	else
+	{
+		cli();        //Variable also used in interrupt and access most be protected
+		pDrvPattern = drvPatternsCCW;   // Set dir to CCW, by pointing to CCW pattern
+		sei();
+	}
 }
 
 
@@ -351,70 +344,140 @@ void Set_Direction(unsigned char direction)
  *
  *  \return void
  */
+
+
+
 int main( void )
 {
-  CLKPR = (1<<CLKPCE); 
-  CLKPR=0x00;
-  MCUCR |= (1<<PUD);  // Disable all pull-ups
-  hallMask = HALL_MASK; // Initialize hallMask variable
-  //Set initial direction.
-  Set_Direction( CLOCKWISE );
 
-  Init_MC_timers();
-  Init_MC_pin_change_interrupt();
-  init_i2c_slave_receiver(ADDRESS, 0, 1);
+	CLKPR = (1<<CLKPCE); 
+	CLKPR=0x00;
+	MCUCR |= (1<<PUD);  // Disable all pull-ups
+	hallMask = HALL_MASK; // Initialize hallMask variable
+	//Set initial direction.
+	Set_Direction( CLOCKWISE );  
+	Init_MC_timers();
+	Init_MC_pin_change_interrupt();
+	init_i2c_slave_receiver(ADDRESS, 0, 1);
 
-  DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
-  PORT_HALL |= HALL_MASK;
-  PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
-  DDR_HALL &= ~HALL_MASK;
-  sei();
+	DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
+	PORT_HALL |= HALL_MASK;
+	PORT_HALL &= ~HALL_MASK;  //Release HALL sensor lines and trigger PC interrupt
+	DDR_HALL &= ~HALL_MASK;
+	sei();
   
-  DDR_MC = MC_MASK;        // Enable outputs
+	DDR_MC = MC_MASK;        // Enable outputs
 
-  DDRB &= ~(1<<7); // limitswitch on input
+	DDRB &= ~(1<<7); // limitswitch on input
   
   
+	brake();
+	Set_Speed(0);
   
-  char enabled = 0;
-  count = 0;
-  Set_Speed(0);
-  brake();
-  
-  for(;;) {
-	  if(command_ready())
-	  {
-		  char* m_c = command();
-		  switch(m_c[0])
-		  {
+	count = 0;
+	while(1)
+	{
+		char* m_c = command();
+		switch(m_c[0])
+		{
+			case CALIBRATE:
+				unbrake();
+				Set_Direction(COUNTERCLOCKWISE);
+				Set_Speed(150);
+				
+			break;
+			case IN:
+				unbrake();
+				Set_Direction(CLOCKWISE);
+				Set_Speed(150);
+			break;
+			case OUT:
+				Set_Speed(0);
+				brake();
+			break;
+			
+		}
+		
+	}
+	
+	/*
+	while(1) {
+		char* m_c = command();
+		switch(m_c[0])
+		{
 			case(CALIBRATE):
 				unbrake();
 				Set_Direction(COUNTERCLOCKWISE);
-				Set_Speed(20);
+				Set_Speed(100);				
 				while(!(PINB & (1<<7)));
 				count = 0;
 				Set_Speed(0);
-				brake();				
+				brake();
 				break;
+			case(IN):
+				Set_Speed(0);
+				brake();
+				Set_Direction(COUNTERCLOCKWISE);
+				Set_Speed(100);
+				while(count >= 10 && (PINB & (1<<7)) == 0);
+				Set_Speed(0);
+				brake();
+				break;
+			case(OUT):
+				unbrake();
+				Set_Direction(CLOCKWISE);
+				Set_Speed(100);
+				Set_Direction(CLOCKWISE);
+				Set_Speed(100);
+				while(count < 1000);
+				Set_Speed(0);
+				brake();
+				break;
+		}		
+	}
+
+  /*	
+    char enabled = 0;
+  count = 0;
+  brake();
+  DDRD = (1<<7)|(1<<4)|(2<<1);
+  PORTD = 1<<7;
+  while(1) {  				
+			char* m_c = command();
+			switch(m_c[0])
+			{
+				case(CALIBRATE):
+					unbrake();
+					Set_Direction(COUNTERCLOCKWISE);
+					Set_Speed(100);				
+					while(!(PINB & (1<<7)));
+					count = 0;
+					Set_Speed(0);
+					brake();
+					break;
+				case(IN):
+					Set_Speed(0);
+					brake();
+					Set_Direction(COUNTERCLOCKWISE);
+					Set_Speed(100);
+					while(count >= 10 && (PINB & (1<<7)) == 0);
+					Set_Speed(0);
+					brake();
+					break;
+				case(OUT):
+					unbrake();
+					Set_Direction(CLOCKWISE);
+					Set_Speed(100);
+					Set_Direction(CLOCKWISE);
+					Set_Speed(100);
+					while(count < 1000);
+					Set_Speed(0);
+					brake();
+					break;
 		  }
 		  
-		  unbrake();
-		  Set_Speed(10);
-		  
-	  }
-	  
-	  
-	  
-	  
-	  if(PINB & (1<<7))
-	  {
-		  enabled = 0;
-		  Set_Speed(0);
-		  brake();
-	  }	  
-  }	  
-	  		
+	  }  
+  }	*/
 }
-
 
 

@@ -25,8 +25,6 @@ int main(void)
 {
 	init_all();
 	init_i2c_slave_receiver(ADDRESS, 0, 1);
-	char a = 0xaa;
-	tx_var(&a);
 	sei();
 	while(1)
 	{
@@ -111,6 +109,7 @@ void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
+	
 	switch(status)
 	{
 		// The following are commands received in SRx mode

@@ -7,7 +7,7 @@ void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned
 void init_all();
 char command_ready();
 char* command();
-void tx_var(volatile unsigned int*);
+void tx_var(char* txv);
 
 #define CALIBRATE	0x00
 #define IN			0x01

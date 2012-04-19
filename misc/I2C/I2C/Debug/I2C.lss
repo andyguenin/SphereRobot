@@ -3,9 +3,9 @@ I2C.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000370  00000000  00000000  00000074  2**1
+  0 .text         0000036e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          00000007  00800100  00800100  000003e4  2**0
+  1 .bss          00000007  00800100  00800100  000003e2  2**0
                   ALLOC
   2 .stab         000006cc  00000000  00000000  000003e4  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -15,17 +15,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   5 .debug_pubnames 000000c4  00000000  00000000  00000b55  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000243  00000000  00000000  00000c19  2**0
+  6 .debug_info   00000237  00000000  00000000  00000c19  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000118  00000000  00000000  00000e5c  2**0
+  7 .debug_abbrev 00000118  00000000  00000000  00000e50  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000355  00000000  00000000  00000f74  2**0
+  8 .debug_line   0000034d  00000000  00000000  00000f68  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000080  00000000  00000000  000012cc  2**2
+  9 .debug_frame  00000080  00000000  00000000  000012b8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000139  00000000  00000000  0000134c  2**0
+ 10 .debug_str    00000139  00000000  00000000  00001338  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_pubtypes 0000001e  00000000  00000000  00001485  2**0
+ 11 .debug_pubtypes 0000001e  00000000  00000000  00001471  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -55,7 +55,7 @@ Disassembly of section .text:
   2a:	14 c0       	rjmp	.+40     	; 0x54 <__bad_interrupt>
   2c:	13 c0       	rjmp	.+38     	; 0x54 <__bad_interrupt>
   2e:	12 c0       	rjmp	.+36     	; 0x54 <__bad_interrupt>
-  30:	f8 c0       	rjmp	.+496    	; 0x222 <__vector_24>
+  30:	f7 c0       	rjmp	.+494    	; 0x220 <__vector_24>
   32:	10 c0       	rjmp	.+32     	; 0x54 <__bad_interrupt>
 
 00000034 <__ctors_end>:
@@ -80,7 +80,7 @@ Disassembly of section .text:
   4c:	b1 07       	cpc	r27, r17
   4e:	e1 f7       	brne	.-8      	; 0x48 <.do_clear_bss_loop>
   50:	02 d0       	rcall	.+4      	; 0x56 <main>
-  52:	8c c1       	rjmp	.+792    	; 0x36c <_exit>
+  52:	8b c1       	rjmp	.+790    	; 0x36a <_exit>
 
 00000054 <__bad_interrupt>:
   54:	d5 cf       	rjmp	.-86     	; 0x0 <__vectors>
@@ -95,590 +95,588 @@ int main(void)
   56:	df 93       	push	r29
   58:	cf 93       	push	r28
   5a:	00 d0       	rcall	.+0      	; 0x5c <main+0x6>
-  5c:	0f 92       	push	r0
-  5e:	cd b7       	in	r28, 0x3d	; 61
-  60:	de b7       	in	r29, 0x3e	; 62
+  5c:	cd b7       	in	r28, 0x3d	; 61
+  5e:	de b7       	in	r29, 0x3e	; 62
 	init_all();
-  62:	86 d0       	rcall	.+268    	; 0x170 <init_all>
+  60:	81 d0       	rcall	.+258    	; 0x164 <init_all>
 	init_i2c_slave_receiver(ADDRESS, 0, 1);
-  64:	81 e0       	ldi	r24, 0x01	; 1
-  66:	60 e0       	ldi	r22, 0x00	; 0
-  68:	41 e0       	ldi	r20, 0x01	; 1
-  6a:	a6 d0       	rcall	.+332    	; 0x1b8 <init_i2c_slave_receiver>
-	char a = 0xaa;
-  6c:	8a ea       	ldi	r24, 0xAA	; 170
-  6e:	8b 83       	std	Y+3, r24	; 0x03
-	tx_var(&a);
-  70:	ce 01       	movw	r24, r28
-  72:	03 96       	adiw	r24, 0x03	; 3
-  74:	6b d0       	rcall	.+214    	; 0x14c <tx_var>
+  62:	81 e0       	ldi	r24, 0x01	; 1
+  64:	60 e0       	ldi	r22, 0x00	; 0
+  66:	41 e0       	ldi	r20, 0x01	; 1
+  68:	a1 d0       	rcall	.+322    	; 0x1ac <init_i2c_slave_receiver>
 	sei();
-  76:	78 94       	sei
-  78:	01 c0       	rjmp	.+2      	; 0x7c <main+0x26>
+  6a:	78 94       	sei
+  6c:	01 c0       	rjmp	.+2      	; 0x70 <main+0x1a>
 				break;
 			default:
 				break;
 			}			
 		}
 	}
-  7a:	00 00       	nop
-	char a = 0xaa;
-	tx_var(&a);
+  6e:	00 00       	nop
+	init_all();
+	init_i2c_slave_receiver(ADDRESS, 0, 1);
 	sei();
 	while(1)
 	{
 		if(command_ready())
-  7c:	89 d0       	rcall	.+274    	; 0x190 <command_ready>
-  7e:	88 23       	and	r24, r24
-  80:	e1 f3       	breq	.-8      	; 0x7a <main+0x24>
+  70:	89 d0       	rcall	.+274    	; 0x184 <command_ready>
+  72:	88 23       	and	r24, r24
+  74:	e1 f3       	breq	.-8      	; 0x6e <main+0x18>
 		{
 			char* m_c = command();
-  82:	8f d0       	rcall	.+286    	; 0x1a2 <command>
-  84:	9a 83       	std	Y+2, r25	; 0x02
-  86:	89 83       	std	Y+1, r24	; 0x01
+  76:	8f d0       	rcall	.+286    	; 0x196 <command>
+  78:	9a 83       	std	Y+2, r25	; 0x02
+  7a:	89 83       	std	Y+1, r24	; 0x01
 			switch(m_c[0])
-  88:	89 81       	ldd	r24, Y+1	; 0x01
-  8a:	9a 81       	ldd	r25, Y+2	; 0x02
-  8c:	fc 01       	movw	r30, r24
-  8e:	80 81       	ld	r24, Z
-  90:	88 2f       	mov	r24, r24
-  92:	90 e0       	ldi	r25, 0x00	; 0
-  94:	81 30       	cpi	r24, 0x01	; 1
-  96:	91 05       	cpc	r25, r1
-  98:	71 f0       	breq	.+28     	; 0xb6 <main+0x60>
+  7c:	89 81       	ldd	r24, Y+1	; 0x01
+  7e:	9a 81       	ldd	r25, Y+2	; 0x02
+  80:	fc 01       	movw	r30, r24
+  82:	80 81       	ld	r24, Z
+  84:	88 2f       	mov	r24, r24
+  86:	90 e0       	ldi	r25, 0x00	; 0
+  88:	81 30       	cpi	r24, 0x01	; 1
+  8a:	91 05       	cpc	r25, r1
+  8c:	71 f0       	breq	.+28     	; 0xaa <main+0x54>
+  8e:	82 30       	cpi	r24, 0x02	; 2
+  90:	91 05       	cpc	r25, r1
+  92:	1c f4       	brge	.+6      	; 0x9a <main+0x44>
+  94:	00 97       	sbiw	r24, 0x00	; 0
+  96:	41 f0       	breq	.+16     	; 0xa8 <main+0x52>
+  98:	51 c0       	rjmp	.+162    	; 0x13c <main+0xe6>
   9a:	82 30       	cpi	r24, 0x02	; 2
   9c:	91 05       	cpc	r25, r1
-  9e:	1c f4       	brge	.+6      	; 0xa6 <main+0x50>
-  a0:	00 97       	sbiw	r24, 0x00	; 0
-  a2:	41 f0       	breq	.+16     	; 0xb4 <main+0x5e>
-  a4:	51 c0       	rjmp	.+162    	; 0x148 <main+0xf2>
-  a6:	82 30       	cpi	r24, 0x02	; 2
-  a8:	91 05       	cpc	r25, r1
-  aa:	49 f1       	breq	.+82     	; 0xfe <main+0xa8>
-  ac:	83 30       	cpi	r24, 0x03	; 3
-  ae:	91 05       	cpc	r25, r1
-  b0:	39 f1       	breq	.+78     	; 0x100 <main+0xaa>
-  b2:	4a c0       	rjmp	.+148    	; 0x148 <main+0xf2>
+  9e:	49 f1       	breq	.+82     	; 0xf2 <main+0x9c>
+  a0:	83 30       	cpi	r24, 0x03	; 3
+  a2:	91 05       	cpc	r25, r1
+  a4:	39 f1       	breq	.+78     	; 0xf4 <main+0x9e>
+  a6:	4a c0       	rjmp	.+148    	; 0x13c <main+0xe6>
 			{
 			case(CALIBRATE):
 				break;
-  b4:	4a c0       	rjmp	.+148    	; 0x14a <main+0xf4>
+  a8:	4a c0       	rjmp	.+148    	; 0x13e <main+0xe8>
 			case(IN):
 				DDRB |= (1<<6)|(1<<7);
-  b6:	84 e2       	ldi	r24, 0x24	; 36
-  b8:	90 e0       	ldi	r25, 0x00	; 0
-  ba:	24 e2       	ldi	r18, 0x24	; 36
-  bc:	30 e0       	ldi	r19, 0x00	; 0
-  be:	f9 01       	movw	r30, r18
-  c0:	20 81       	ld	r18, Z
-  c2:	20 6c       	ori	r18, 0xC0	; 192
-  c4:	fc 01       	movw	r30, r24
-  c6:	20 83       	st	Z, r18
+  aa:	84 e2       	ldi	r24, 0x24	; 36
+  ac:	90 e0       	ldi	r25, 0x00	; 0
+  ae:	24 e2       	ldi	r18, 0x24	; 36
+  b0:	30 e0       	ldi	r19, 0x00	; 0
+  b2:	f9 01       	movw	r30, r18
+  b4:	20 81       	ld	r18, Z
+  b6:	20 6c       	ori	r18, 0xC0	; 192
+  b8:	fc 01       	movw	r30, r24
+  ba:	20 83       	st	Z, r18
 				if(m_c[1] == 2)
-  c8:	89 81       	ldd	r24, Y+1	; 0x01
-  ca:	9a 81       	ldd	r25, Y+2	; 0x02
-  cc:	01 96       	adiw	r24, 0x01	; 1
-  ce:	fc 01       	movw	r30, r24
-  d0:	80 81       	ld	r24, Z
-  d2:	82 30       	cpi	r24, 0x02	; 2
-  d4:	51 f4       	brne	.+20     	; 0xea <main+0x94>
+  bc:	89 81       	ldd	r24, Y+1	; 0x01
+  be:	9a 81       	ldd	r25, Y+2	; 0x02
+  c0:	01 96       	adiw	r24, 0x01	; 1
+  c2:	fc 01       	movw	r30, r24
+  c4:	80 81       	ld	r24, Z
+  c6:	82 30       	cpi	r24, 0x02	; 2
+  c8:	51 f4       	brne	.+20     	; 0xde <main+0x88>
 				{
 					PORTB |= 1<<6;
-  d6:	85 e2       	ldi	r24, 0x25	; 37
-  d8:	90 e0       	ldi	r25, 0x00	; 0
-  da:	25 e2       	ldi	r18, 0x25	; 37
-  dc:	30 e0       	ldi	r19, 0x00	; 0
-  de:	f9 01       	movw	r30, r18
-  e0:	20 81       	ld	r18, Z
-  e2:	20 64       	ori	r18, 0x40	; 64
-  e4:	fc 01       	movw	r30, r24
-  e6:	20 83       	st	Z, r18
-  e8:	09 c0       	rjmp	.+18     	; 0xfc <main+0xa6>
+  ca:	85 e2       	ldi	r24, 0x25	; 37
+  cc:	90 e0       	ldi	r25, 0x00	; 0
+  ce:	25 e2       	ldi	r18, 0x25	; 37
+  d0:	30 e0       	ldi	r19, 0x00	; 0
+  d2:	f9 01       	movw	r30, r18
+  d4:	20 81       	ld	r18, Z
+  d6:	20 64       	ori	r18, 0x40	; 64
+  d8:	fc 01       	movw	r30, r24
+  da:	20 83       	st	Z, r18
+  dc:	09 c0       	rjmp	.+18     	; 0xf0 <main+0x9a>
 				}
 				else
 				{
 					PORTB |= 1<<7;
-  ea:	85 e2       	ldi	r24, 0x25	; 37
-  ec:	90 e0       	ldi	r25, 0x00	; 0
-  ee:	25 e2       	ldi	r18, 0x25	; 37
-  f0:	30 e0       	ldi	r19, 0x00	; 0
-  f2:	f9 01       	movw	r30, r18
-  f4:	20 81       	ld	r18, Z
-  f6:	20 68       	ori	r18, 0x80	; 128
-  f8:	fc 01       	movw	r30, r24
-  fa:	20 83       	st	Z, r18
+  de:	85 e2       	ldi	r24, 0x25	; 37
+  e0:	90 e0       	ldi	r25, 0x00	; 0
+  e2:	25 e2       	ldi	r18, 0x25	; 37
+  e4:	30 e0       	ldi	r19, 0x00	; 0
+  e6:	f9 01       	movw	r30, r18
+  e8:	20 81       	ld	r18, Z
+  ea:	20 68       	ori	r18, 0x80	; 128
+  ec:	fc 01       	movw	r30, r24
+  ee:	20 83       	st	Z, r18
 				}				
 				break;
-  fc:	26 c0       	rjmp	.+76     	; 0x14a <main+0xf4>
+  f0:	26 c0       	rjmp	.+76     	; 0x13e <main+0xe8>
 			case(OUT):
 				break;
-  fe:	25 c0       	rjmp	.+74     	; 0x14a <main+0xf4>
+  f2:	25 c0       	rjmp	.+74     	; 0x13e <main+0xe8>
 			case(STOP):
 				DDRD |= (1<<6)|(1<<7);
- 100:	8a e2       	ldi	r24, 0x2A	; 42
- 102:	90 e0       	ldi	r25, 0x00	; 0
- 104:	2a e2       	ldi	r18, 0x2A	; 42
- 106:	30 e0       	ldi	r19, 0x00	; 0
- 108:	f9 01       	movw	r30, r18
- 10a:	20 81       	ld	r18, Z
- 10c:	20 6c       	ori	r18, 0xC0	; 192
- 10e:	fc 01       	movw	r30, r24
- 110:	20 83       	st	Z, r18
+  f4:	8a e2       	ldi	r24, 0x2A	; 42
+  f6:	90 e0       	ldi	r25, 0x00	; 0
+  f8:	2a e2       	ldi	r18, 0x2A	; 42
+  fa:	30 e0       	ldi	r19, 0x00	; 0
+  fc:	f9 01       	movw	r30, r18
+  fe:	20 81       	ld	r18, Z
+ 100:	20 6c       	ori	r18, 0xC0	; 192
+ 102:	fc 01       	movw	r30, r24
+ 104:	20 83       	st	Z, r18
 				if(m_c[1] == 4)
- 112:	89 81       	ldd	r24, Y+1	; 0x01
- 114:	9a 81       	ldd	r25, Y+2	; 0x02
- 116:	01 96       	adiw	r24, 0x01	; 1
- 118:	fc 01       	movw	r30, r24
- 11a:	80 81       	ld	r24, Z
- 11c:	84 30       	cpi	r24, 0x04	; 4
- 11e:	51 f4       	brne	.+20     	; 0x134 <main+0xde>
+ 106:	89 81       	ldd	r24, Y+1	; 0x01
+ 108:	9a 81       	ldd	r25, Y+2	; 0x02
+ 10a:	01 96       	adiw	r24, 0x01	; 1
+ 10c:	fc 01       	movw	r30, r24
+ 10e:	80 81       	ld	r24, Z
+ 110:	84 30       	cpi	r24, 0x04	; 4
+ 112:	51 f4       	brne	.+20     	; 0x128 <main+0xd2>
 				{
 					PORTD |= 1<<6;
- 120:	8b e2       	ldi	r24, 0x2B	; 43
- 122:	90 e0       	ldi	r25, 0x00	; 0
- 124:	2b e2       	ldi	r18, 0x2B	; 43
- 126:	30 e0       	ldi	r19, 0x00	; 0
- 128:	f9 01       	movw	r30, r18
- 12a:	20 81       	ld	r18, Z
- 12c:	20 64       	ori	r18, 0x40	; 64
- 12e:	fc 01       	movw	r30, r24
- 130:	20 83       	st	Z, r18
- 132:	09 c0       	rjmp	.+18     	; 0x146 <main+0xf0>
+ 114:	8b e2       	ldi	r24, 0x2B	; 43
+ 116:	90 e0       	ldi	r25, 0x00	; 0
+ 118:	2b e2       	ldi	r18, 0x2B	; 43
+ 11a:	30 e0       	ldi	r19, 0x00	; 0
+ 11c:	f9 01       	movw	r30, r18
+ 11e:	20 81       	ld	r18, Z
+ 120:	20 64       	ori	r18, 0x40	; 64
+ 122:	fc 01       	movw	r30, r24
+ 124:	20 83       	st	Z, r18
+ 126:	09 c0       	rjmp	.+18     	; 0x13a <main+0xe4>
 				}
 				else
 				{
 					PORTD |= 1<<7;
- 134:	8b e2       	ldi	r24, 0x2B	; 43
- 136:	90 e0       	ldi	r25, 0x00	; 0
- 138:	2b e2       	ldi	r18, 0x2B	; 43
- 13a:	30 e0       	ldi	r19, 0x00	; 0
- 13c:	f9 01       	movw	r30, r18
- 13e:	20 81       	ld	r18, Z
- 140:	20 68       	ori	r18, 0x80	; 128
- 142:	fc 01       	movw	r30, r24
- 144:	20 83       	st	Z, r18
+ 128:	8b e2       	ldi	r24, 0x2B	; 43
+ 12a:	90 e0       	ldi	r25, 0x00	; 0
+ 12c:	2b e2       	ldi	r18, 0x2B	; 43
+ 12e:	30 e0       	ldi	r19, 0x00	; 0
+ 130:	f9 01       	movw	r30, r18
+ 132:	20 81       	ld	r18, Z
+ 134:	20 68       	ori	r18, 0x80	; 128
+ 136:	fc 01       	movw	r30, r24
+ 138:	20 83       	st	Z, r18
 				}	
 				break;
- 146:	01 c0       	rjmp	.+2      	; 0x14a <main+0xf4>
+ 13a:	01 c0       	rjmp	.+2      	; 0x13e <main+0xe8>
 			default:
 				break;
- 148:	00 00       	nop
+ 13c:	00 00       	nop
 			}			
 		}
 	}
- 14a:	98 cf       	rjmp	.-208    	; 0x7c <main+0x26>
+ 13e:	98 cf       	rjmp	.-208    	; 0x70 <main+0x1a>
 
-0000014c <tx_var>:
+00000140 <tx_var>:
 	
 	
 }
 
 void tx_var(char* txv)
 {
- 14c:	df 93       	push	r29
- 14e:	cf 93       	push	r28
- 150:	00 d0       	rcall	.+0      	; 0x152 <tx_var+0x6>
- 152:	cd b7       	in	r28, 0x3d	; 61
- 154:	de b7       	in	r29, 0x3e	; 62
- 156:	9a 83       	std	Y+2, r25	; 0x02
- 158:	89 83       	std	Y+1, r24	; 0x01
+ 140:	df 93       	push	r29
+ 142:	cf 93       	push	r28
+ 144:	00 d0       	rcall	.+0      	; 0x146 <tx_var+0x6>
+ 146:	cd b7       	in	r28, 0x3d	; 61
+ 148:	de b7       	in	r29, 0x3e	; 62
+ 14a:	9a 83       	std	Y+2, r25	; 0x02
+ 14c:	89 83       	std	Y+1, r24	; 0x01
 	tx_num = txv;
- 15a:	89 81       	ldd	r24, Y+1	; 0x01
- 15c:	9a 81       	ldd	r25, Y+2	; 0x02
- 15e:	90 93 04 01 	sts	0x0104, r25
- 162:	80 93 03 01 	sts	0x0103, r24
+ 14e:	89 81       	ldd	r24, Y+1	; 0x01
+ 150:	9a 81       	ldd	r25, Y+2	; 0x02
+ 152:	90 93 04 01 	sts	0x0104, r25
+ 156:	80 93 03 01 	sts	0x0103, r24
 }
- 166:	0f 90       	pop	r0
- 168:	0f 90       	pop	r0
- 16a:	cf 91       	pop	r28
- 16c:	df 91       	pop	r29
- 16e:	08 95       	ret
+ 15a:	0f 90       	pop	r0
+ 15c:	0f 90       	pop	r0
+ 15e:	cf 91       	pop	r28
+ 160:	df 91       	pop	r29
+ 162:	08 95       	ret
 
-00000170 <init_all>:
+00000164 <init_all>:
 
 
 void init_all()
 {
- 170:	df 93       	push	r29
- 172:	cf 93       	push	r28
- 174:	cd b7       	in	r28, 0x3d	; 61
- 176:	de b7       	in	r29, 0x3e	; 62
+ 164:	df 93       	push	r29
+ 166:	cf 93       	push	r28
+ 168:	cd b7       	in	r28, 0x3d	; 61
+ 16a:	de b7       	in	r29, 0x3e	; 62
 	CLKPR = 1<<7;
- 178:	81 e6       	ldi	r24, 0x61	; 97
- 17a:	90 e0       	ldi	r25, 0x00	; 0
- 17c:	20 e8       	ldi	r18, 0x80	; 128
- 17e:	fc 01       	movw	r30, r24
- 180:	20 83       	st	Z, r18
+ 16c:	81 e6       	ldi	r24, 0x61	; 97
+ 16e:	90 e0       	ldi	r25, 0x00	; 0
+ 170:	20 e8       	ldi	r18, 0x80	; 128
+ 172:	fc 01       	movw	r30, r24
+ 174:	20 83       	st	Z, r18
 	CLKPR = 0;
- 182:	81 e6       	ldi	r24, 0x61	; 97
- 184:	90 e0       	ldi	r25, 0x00	; 0
- 186:	fc 01       	movw	r30, r24
- 188:	10 82       	st	Z, r1
+ 176:	81 e6       	ldi	r24, 0x61	; 97
+ 178:	90 e0       	ldi	r25, 0x00	; 0
+ 17a:	fc 01       	movw	r30, r24
+ 17c:	10 82       	st	Z, r1
 }
- 18a:	cf 91       	pop	r28
- 18c:	df 91       	pop	r29
- 18e:	08 95       	ret
+ 17e:	cf 91       	pop	r28
+ 180:	df 91       	pop	r29
+ 182:	08 95       	ret
 
-00000190 <command_ready>:
+00000184 <command_ready>:
 
 char command_ready()
 {
- 190:	df 93       	push	r29
- 192:	cf 93       	push	r28
- 194:	cd b7       	in	r28, 0x3d	; 61
- 196:	de b7       	in	r29, 0x3e	; 62
+ 184:	df 93       	push	r29
+ 186:	cf 93       	push	r28
+ 188:	cd b7       	in	r28, 0x3d	; 61
+ 18a:	de b7       	in	r29, 0x3e	; 62
 	return run_command;
- 198:	80 91 02 01 	lds	r24, 0x0102
+ 18c:	80 91 02 01 	lds	r24, 0x0102
 }
- 19c:	cf 91       	pop	r28
- 19e:	df 91       	pop	r29
- 1a0:	08 95       	ret
+ 190:	cf 91       	pop	r28
+ 192:	df 91       	pop	r29
+ 194:	08 95       	ret
 
-000001a2 <command>:
+00000196 <command>:
 
 char* command()
 {
- 1a2:	df 93       	push	r29
- 1a4:	cf 93       	push	r28
- 1a6:	cd b7       	in	r28, 0x3d	; 61
- 1a8:	de b7       	in	r29, 0x3e	; 62
+ 196:	df 93       	push	r29
+ 198:	cf 93       	push	r28
+ 19a:	cd b7       	in	r28, 0x3d	; 61
+ 19c:	de b7       	in	r29, 0x3e	; 62
 	run_command = 0;
- 1aa:	10 92 02 01 	sts	0x0102, r1
+ 19e:	10 92 02 01 	sts	0x0102, r1
 	return motor_command;
- 1ae:	85 e0       	ldi	r24, 0x05	; 5
- 1b0:	91 e0       	ldi	r25, 0x01	; 1
+ 1a2:	85 e0       	ldi	r24, 0x05	; 5
+ 1a4:	91 e0       	ldi	r25, 0x01	; 1
 }
- 1b2:	cf 91       	pop	r28
- 1b4:	df 91       	pop	r29
- 1b6:	08 95       	ret
+ 1a6:	cf 91       	pop	r28
+ 1a8:	df 91       	pop	r29
+ 1aa:	08 95       	ret
 
-000001b8 <init_i2c_slave_receiver>:
+000001ac <init_i2c_slave_receiver>:
 
 void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned char respond_to_announce)
 {
- 1b8:	df 93       	push	r29
- 1ba:	cf 93       	push	r28
- 1bc:	00 d0       	rcall	.+0      	; 0x1be <init_i2c_slave_receiver+0x6>
- 1be:	0f 92       	push	r0
- 1c0:	cd b7       	in	r28, 0x3d	; 61
- 1c2:	de b7       	in	r29, 0x3e	; 62
- 1c4:	89 83       	std	Y+1, r24	; 0x01
- 1c6:	6a 83       	std	Y+2, r22	; 0x02
- 1c8:	4b 83       	std	Y+3, r20	; 0x03
+ 1ac:	df 93       	push	r29
+ 1ae:	cf 93       	push	r28
+ 1b0:	00 d0       	rcall	.+0      	; 0x1b2 <init_i2c_slave_receiver+0x6>
+ 1b2:	0f 92       	push	r0
+ 1b4:	cd b7       	in	r28, 0x3d	; 61
+ 1b6:	de b7       	in	r29, 0x3e	; 62
+ 1b8:	89 83       	std	Y+1, r24	; 0x01
+ 1ba:	6a 83       	std	Y+2, r22	; 0x02
+ 1bc:	4b 83       	std	Y+3, r20	; 0x03
 	motor_command[0] = 0;
- 1ca:	10 92 05 01 	sts	0x0105, r1
+ 1be:	10 92 05 01 	sts	0x0105, r1
 	motor_command[1] = 0;
- 1ce:	10 92 06 01 	sts	0x0106, r1
+ 1c2:	10 92 06 01 	sts	0x0106, r1
 	TWAR = address << 1; // sets the slave address
- 1d2:	8a eb       	ldi	r24, 0xBA	; 186
- 1d4:	90 e0       	ldi	r25, 0x00	; 0
- 1d6:	29 81       	ldd	r18, Y+1	; 0x01
- 1d8:	22 0f       	add	r18, r18
- 1da:	fc 01       	movw	r30, r24
- 1dc:	20 83       	st	Z, r18
+ 1c6:	8a eb       	ldi	r24, 0xBA	; 186
+ 1c8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ca:	29 81       	ldd	r18, Y+1	; 0x01
+ 1cc:	22 0f       	add	r18, r18
+ 1ce:	fc 01       	movw	r30, r24
+ 1d0:	20 83       	st	Z, r18
 	if(respond_to_announce)
- 1de:	8b 81       	ldd	r24, Y+3	; 0x03
- 1e0:	88 23       	and	r24, r24
- 1e2:	49 f0       	breq	.+18     	; 0x1f6 <init_i2c_slave_receiver+0x3e>
+ 1d2:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1d4:	88 23       	and	r24, r24
+ 1d6:	49 f0       	breq	.+18     	; 0x1ea <init_i2c_slave_receiver+0x3e>
 	{
 		TWAR |= 1;
- 1e4:	8a eb       	ldi	r24, 0xBA	; 186
- 1e6:	90 e0       	ldi	r25, 0x00	; 0
- 1e8:	2a eb       	ldi	r18, 0xBA	; 186
- 1ea:	30 e0       	ldi	r19, 0x00	; 0
- 1ec:	f9 01       	movw	r30, r18
- 1ee:	20 81       	ld	r18, Z
- 1f0:	21 60       	ori	r18, 0x01	; 1
- 1f2:	fc 01       	movw	r30, r24
- 1f4:	20 83       	st	Z, r18
+ 1d8:	8a eb       	ldi	r24, 0xBA	; 186
+ 1da:	90 e0       	ldi	r25, 0x00	; 0
+ 1dc:	2a eb       	ldi	r18, 0xBA	; 186
+ 1de:	30 e0       	ldi	r19, 0x00	; 0
+ 1e0:	f9 01       	movw	r30, r18
+ 1e2:	20 81       	ld	r18, Z
+ 1e4:	21 60       	ori	r18, 0x01	; 1
+ 1e6:	fc 01       	movw	r30, r24
+ 1e8:	20 83       	st	Z, r18
 	}	
 	TWAMR = mask << 1;
- 1f6:	8d eb       	ldi	r24, 0xBD	; 189
- 1f8:	90 e0       	ldi	r25, 0x00	; 0
- 1fa:	2a 81       	ldd	r18, Y+2	; 0x02
- 1fc:	22 0f       	add	r18, r18
- 1fe:	fc 01       	movw	r30, r24
- 200:	20 83       	st	Z, r18
+ 1ea:	8d eb       	ldi	r24, 0xBD	; 189
+ 1ec:	90 e0       	ldi	r25, 0x00	; 0
+ 1ee:	2a 81       	ldd	r18, Y+2	; 0x02
+ 1f0:	22 0f       	add	r18, r18
+ 1f2:	fc 01       	movw	r30, r24
+ 1f4:	20 83       	st	Z, r18
 	TWDR = 0xFF;
- 202:	8b eb       	ldi	r24, 0xBB	; 187
- 204:	90 e0       	ldi	r25, 0x00	; 0
- 206:	2f ef       	ldi	r18, 0xFF	; 255
- 208:	fc 01       	movw	r30, r24
- 20a:	20 83       	st	Z, r18
+ 1f6:	8b eb       	ldi	r24, 0xBB	; 187
+ 1f8:	90 e0       	ldi	r25, 0x00	; 0
+ 1fa:	2f ef       	ldi	r18, 0xFF	; 255
+ 1fc:	fc 01       	movw	r30, r24
+ 1fe:	20 83       	st	Z, r18
 	TWCR = TWI_COMM_MASK;
- 20c:	8c eb       	ldi	r24, 0xBC	; 188
- 20e:	90 e0       	ldi	r25, 0x00	; 0
- 210:	25 ec       	ldi	r18, 0xC5	; 197
- 212:	fc 01       	movw	r30, r24
- 214:	20 83       	st	Z, r18
+ 200:	8c eb       	ldi	r24, 0xBC	; 188
+ 202:	90 e0       	ldi	r25, 0x00	; 0
+ 204:	25 ec       	ldi	r18, 0xC5	; 197
+ 206:	fc 01       	movw	r30, r24
+ 208:	20 83       	st	Z, r18
+	DDRD = 0xf;
+ 20a:	8a e2       	ldi	r24, 0x2A	; 42
+ 20c:	90 e0       	ldi	r25, 0x00	; 0
+ 20e:	2f e0       	ldi	r18, 0x0F	; 15
+ 210:	fc 01       	movw	r30, r24
+ 212:	20 83       	st	Z, r18
 }
+ 214:	0f 90       	pop	r0
  216:	0f 90       	pop	r0
  218:	0f 90       	pop	r0
- 21a:	0f 90       	pop	r0
- 21c:	cf 91       	pop	r28
- 21e:	df 91       	pop	r29
- 220:	08 95       	ret
+ 21a:	cf 91       	pop	r28
+ 21c:	df 91       	pop	r29
+ 21e:	08 95       	ret
 
-00000222 <__vector_24>:
+00000220 <__vector_24>:
 
 ISR(TWI_vect)
 {	
- 222:	1f 92       	push	r1
- 224:	0f 92       	push	r0
- 226:	0f b6       	in	r0, 0x3f	; 63
- 228:	0f 92       	push	r0
- 22a:	11 24       	eor	r1, r1
- 22c:	2f 93       	push	r18
- 22e:	3f 93       	push	r19
- 230:	8f 93       	push	r24
- 232:	9f 93       	push	r25
- 234:	ef 93       	push	r30
- 236:	ff 93       	push	r31
- 238:	df 93       	push	r29
- 23a:	cf 93       	push	r28
- 23c:	0f 92       	push	r0
- 23e:	cd b7       	in	r28, 0x3d	; 61
- 240:	de b7       	in	r29, 0x3e	; 62
+ 220:	1f 92       	push	r1
+ 222:	0f 92       	push	r0
+ 224:	0f b6       	in	r0, 0x3f	; 63
+ 226:	0f 92       	push	r0
+ 228:	11 24       	eor	r1, r1
+ 22a:	2f 93       	push	r18
+ 22c:	3f 93       	push	r19
+ 22e:	8f 93       	push	r24
+ 230:	9f 93       	push	r25
+ 232:	ef 93       	push	r30
+ 234:	ff 93       	push	r31
+ 236:	df 93       	push	r29
+ 238:	cf 93       	push	r28
+ 23a:	0f 92       	push	r0
+ 23c:	cd b7       	in	r28, 0x3d	; 61
+ 23e:	de b7       	in	r29, 0x3e	; 62
 	unsigned char status = TWSR & 0xF8;
- 242:	89 eb       	ldi	r24, 0xB9	; 185
- 244:	90 e0       	ldi	r25, 0x00	; 0
- 246:	fc 01       	movw	r30, r24
- 248:	80 81       	ld	r24, Z
- 24a:	88 7f       	andi	r24, 0xF8	; 248
- 24c:	89 83       	std	Y+1, r24	; 0x01
+ 240:	89 eb       	ldi	r24, 0xB9	; 185
+ 242:	90 e0       	ldi	r25, 0x00	; 0
+ 244:	fc 01       	movw	r30, r24
+ 246:	80 81       	ld	r24, Z
+ 248:	88 7f       	andi	r24, 0xF8	; 248
+ 24a:	89 83       	std	Y+1, r24	; 0x01
 	switch(status)
- 24e:	89 81       	ldd	r24, Y+1	; 0x01
- 250:	88 2f       	mov	r24, r24
- 252:	90 e0       	ldi	r25, 0x00	; 0
- 254:	80 3a       	cpi	r24, 0xA0	; 160
- 256:	91 05       	cpc	r25, r1
- 258:	09 f4       	brne	.+2      	; 0x25c <__vector_24+0x3a>
- 25a:	4f c0       	rjmp	.+158    	; 0x2fa <__vector_24+0xd8>
- 25c:	81 3a       	cpi	r24, 0xA1	; 161
- 25e:	91 05       	cpc	r25, r1
- 260:	8c f4       	brge	.+34     	; 0x284 <__vector_24+0x62>
- 262:	80 37       	cpi	r24, 0x70	; 112
- 264:	91 05       	cpc	r25, r1
- 266:	11 f1       	breq	.+68     	; 0x2ac <__vector_24+0x8a>
- 268:	81 37       	cpi	r24, 0x71	; 113
- 26a:	91 05       	cpc	r25, r1
- 26c:	24 f4       	brge	.+8      	; 0x276 <__vector_24+0x54>
- 26e:	80 36       	cpi	r24, 0x60	; 96
- 270:	91 05       	cpc	r25, r1
- 272:	e1 f0       	breq	.+56     	; 0x2ac <__vector_24+0x8a>
+ 24c:	89 81       	ldd	r24, Y+1	; 0x01
+ 24e:	88 2f       	mov	r24, r24
+ 250:	90 e0       	ldi	r25, 0x00	; 0
+ 252:	80 3a       	cpi	r24, 0xA0	; 160
+ 254:	91 05       	cpc	r25, r1
+ 256:	09 f4       	brne	.+2      	; 0x25a <__vector_24+0x3a>
+ 258:	4f c0       	rjmp	.+158    	; 0x2f8 <__vector_24+0xd8>
+ 25a:	81 3a       	cpi	r24, 0xA1	; 161
+ 25c:	91 05       	cpc	r25, r1
+ 25e:	8c f4       	brge	.+34     	; 0x282 <__vector_24+0x62>
+ 260:	80 37       	cpi	r24, 0x70	; 112
+ 262:	91 05       	cpc	r25, r1
+ 264:	11 f1       	breq	.+68     	; 0x2aa <__vector_24+0x8a>
+ 266:	81 37       	cpi	r24, 0x71	; 113
+ 268:	91 05       	cpc	r25, r1
+ 26a:	24 f4       	brge	.+8      	; 0x274 <__vector_24+0x54>
+ 26c:	80 36       	cpi	r24, 0x60	; 96
+ 26e:	91 05       	cpc	r25, r1
+ 270:	e1 f0       	breq	.+56     	; 0x2aa <__vector_24+0x8a>
 		case(0xC0): // Last data byte has been transmitted
 			TWDR = 0;
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
 			break;
 		default: // Something unexpected happened
 			break;
- 274:	6d c0       	rjmp	.+218    	; 0x350 <__stack+0x51>
+ 272:	6d c0       	rjmp	.+218    	; 0x34e <__stack+0x4f>
 }
 
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
 	switch(status)
- 276:	80 38       	cpi	r24, 0x80	; 128
- 278:	91 05       	cpc	r25, r1
- 27a:	21 f1       	breq	.+72     	; 0x2c4 <__vector_24+0xa2>
- 27c:	80 39       	cpi	r24, 0x90	; 144
- 27e:	91 05       	cpc	r25, r1
- 280:	09 f1       	breq	.+66     	; 0x2c4 <__vector_24+0xa2>
+ 274:	80 38       	cpi	r24, 0x80	; 128
+ 276:	91 05       	cpc	r25, r1
+ 278:	21 f1       	breq	.+72     	; 0x2c2 <__vector_24+0xa2>
+ 27a:	80 39       	cpi	r24, 0x90	; 144
+ 27c:	91 05       	cpc	r25, r1
+ 27e:	09 f1       	breq	.+66     	; 0x2c2 <__vector_24+0xa2>
 		case(0xC0): // Last data byte has been transmitted
 			TWDR = 0;
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
 			break;
 		default: // Something unexpected happened
 			break;
- 282:	66 c0       	rjmp	.+204    	; 0x350 <__stack+0x51>
+ 280:	66 c0       	rjmp	.+204    	; 0x34e <__stack+0x4f>
 }
 
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
 	switch(status)
- 284:	88 3b       	cpi	r24, 0xB8	; 184
- 286:	91 05       	cpc	r25, r1
- 288:	09 f4       	brne	.+2      	; 0x28c <__vector_24+0x6a>
- 28a:	5f c0       	rjmp	.+190    	; 0x34a <__stack+0x4b>
- 28c:	89 3b       	cpi	r24, 0xB9	; 185
- 28e:	91 05       	cpc	r25, r1
- 290:	24 f4       	brge	.+8      	; 0x29a <__vector_24+0x78>
- 292:	88 3a       	cpi	r24, 0xA8	; 168
- 294:	91 05       	cpc	r25, r1
- 296:	d1 f1       	breq	.+116    	; 0x30c <__stack+0xd>
+ 282:	88 3b       	cpi	r24, 0xB8	; 184
+ 284:	91 05       	cpc	r25, r1
+ 286:	09 f4       	brne	.+2      	; 0x28a <__vector_24+0x6a>
+ 288:	5f c0       	rjmp	.+190    	; 0x348 <__stack+0x49>
+ 28a:	89 3b       	cpi	r24, 0xB9	; 185
+ 28c:	91 05       	cpc	r25, r1
+ 28e:	24 f4       	brge	.+8      	; 0x298 <__vector_24+0x78>
+ 290:	88 3a       	cpi	r24, 0xA8	; 168
+ 292:	91 05       	cpc	r25, r1
+ 294:	d1 f1       	breq	.+116    	; 0x30a <__stack+0xb>
 		case(0xC0): // Last data byte has been transmitted
 			TWDR = 0;
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
 			break;
 		default: // Something unexpected happened
 			break;
- 298:	5b c0       	rjmp	.+182    	; 0x350 <__stack+0x51>
+ 296:	5b c0       	rjmp	.+182    	; 0x34e <__stack+0x4f>
 }
 
 ISR(TWI_vect)
 {	
 	unsigned char status = TWSR & 0xF8;
 	switch(status)
- 29a:	80 3c       	cpi	r24, 0xC0	; 192
- 29c:	91 05       	cpc	r25, r1
- 29e:	09 f4       	brne	.+2      	; 0x2a2 <__vector_24+0x80>
- 2a0:	49 c0       	rjmp	.+146    	; 0x334 <__stack+0x35>
- 2a2:	88 3c       	cpi	r24, 0xC8	; 200
- 2a4:	91 05       	cpc	r25, r1
- 2a6:	09 f4       	brne	.+2      	; 0x2aa <__vector_24+0x88>
- 2a8:	45 c0       	rjmp	.+138    	; 0x334 <__stack+0x35>
+ 298:	80 3c       	cpi	r24, 0xC0	; 192
+ 29a:	91 05       	cpc	r25, r1
+ 29c:	09 f4       	brne	.+2      	; 0x2a0 <__vector_24+0x80>
+ 29e:	49 c0       	rjmp	.+146    	; 0x332 <__stack+0x33>
+ 2a0:	88 3c       	cpi	r24, 0xC8	; 200
+ 2a2:	91 05       	cpc	r25, r1
+ 2a4:	09 f4       	brne	.+2      	; 0x2a8 <__vector_24+0x88>
+ 2a6:	45 c0       	rjmp	.+138    	; 0x332 <__stack+0x33>
 		case(0xC0): // Last data byte has been transmitted
 			TWDR = 0;
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
 			break;
 		default: // Something unexpected happened
 			break;
- 2aa:	52 c0       	rjmp	.+164    	; 0x350 <__stack+0x51>
+ 2a8:	52 c0       	rjmp	.+164    	; 0x34e <__stack+0x4f>
 	switch(status)
 	{
 		// The following are commands received in SRx mode
 		case(0x60): // own SLA + W has been received, ACK returned
 		case(0x70): // own GA has been received, ACK returned
 			pointer = 0;
- 2ac:	10 92 00 01 	sts	0x0100, r1
+ 2aa:	10 92 00 01 	sts	0x0100, r1
 			motor_command[0] = 0;
- 2b0:	10 92 05 01 	sts	0x0105, r1
+ 2ae:	10 92 05 01 	sts	0x0105, r1
 			motor_command[1] = 0;
- 2b4:	10 92 06 01 	sts	0x0106, r1
+ 2b2:	10 92 06 01 	sts	0x0106, r1
 			TWCR = TWI_COMM_MASK; // Data byte will be received and ACK returned
- 2b8:	8c eb       	ldi	r24, 0xBC	; 188
- 2ba:	90 e0       	ldi	r25, 0x00	; 0
- 2bc:	25 ec       	ldi	r18, 0xC5	; 197
- 2be:	fc 01       	movw	r30, r24
- 2c0:	20 83       	st	Z, r18
+ 2b6:	8c eb       	ldi	r24, 0xBC	; 188
+ 2b8:	90 e0       	ldi	r25, 0x00	; 0
+ 2ba:	25 ec       	ldi	r18, 0xC5	; 197
+ 2bc:	fc 01       	movw	r30, r24
+ 2be:	20 83       	st	Z, r18
 			break;
- 2c2:	46 c0       	rjmp	.+140    	; 0x350 <__stack+0x51>
+ 2c0:	46 c0       	rjmp	.+140    	; 0x34e <__stack+0x4f>
 		case(0x80): // already addressed with SLA, data has been received and ACK returned
 		case(0x90): // already addressed with GA, data has been received and ACK returned
 			if(pointer < 2)
- 2c4:	80 91 00 01 	lds	r24, 0x0100
- 2c8:	82 30       	cpi	r24, 0x02	; 2
- 2ca:	88 f4       	brcc	.+34     	; 0x2ee <__vector_24+0xcc>
+ 2c2:	80 91 00 01 	lds	r24, 0x0100
+ 2c6:	82 30       	cpi	r24, 0x02	; 2
+ 2c8:	88 f4       	brcc	.+34     	; 0x2ec <__vector_24+0xcc>
 			{
 				motor_command[pointer] = TWDR;
- 2cc:	80 91 00 01 	lds	r24, 0x0100
- 2d0:	88 2f       	mov	r24, r24
- 2d2:	90 e0       	ldi	r25, 0x00	; 0
- 2d4:	2b eb       	ldi	r18, 0xBB	; 187
- 2d6:	30 e0       	ldi	r19, 0x00	; 0
- 2d8:	f9 01       	movw	r30, r18
- 2da:	20 81       	ld	r18, Z
- 2dc:	8b 5f       	subi	r24, 0xFB	; 251
- 2de:	9e 4f       	sbci	r25, 0xFE	; 254
- 2e0:	fc 01       	movw	r30, r24
- 2e2:	20 83       	st	Z, r18
+ 2ca:	80 91 00 01 	lds	r24, 0x0100
+ 2ce:	88 2f       	mov	r24, r24
+ 2d0:	90 e0       	ldi	r25, 0x00	; 0
+ 2d2:	2b eb       	ldi	r18, 0xBB	; 187
+ 2d4:	30 e0       	ldi	r19, 0x00	; 0
+ 2d6:	f9 01       	movw	r30, r18
+ 2d8:	20 81       	ld	r18, Z
+ 2da:	8b 5f       	subi	r24, 0xFB	; 251
+ 2dc:	9e 4f       	sbci	r25, 0xFE	; 254
+ 2de:	fc 01       	movw	r30, r24
+ 2e0:	20 83       	st	Z, r18
 				pointer++;
- 2e4:	80 91 00 01 	lds	r24, 0x0100
- 2e8:	8f 5f       	subi	r24, 0xFF	; 255
- 2ea:	80 93 00 01 	sts	0x0100, r24
+ 2e2:	80 91 00 01 	lds	r24, 0x0100
+ 2e6:	8f 5f       	subi	r24, 0xFF	; 255
+ 2e8:	80 93 00 01 	sts	0x0100, r24
 			}			
 			TWCR = TWI_COMM_MASK; // Data byte will be received and ACK returned
- 2ee:	8c eb       	ldi	r24, 0xBC	; 188
- 2f0:	90 e0       	ldi	r25, 0x00	; 0
- 2f2:	25 ec       	ldi	r18, 0xC5	; 197
- 2f4:	fc 01       	movw	r30, r24
- 2f6:	20 83       	st	Z, r18
+ 2ec:	8c eb       	ldi	r24, 0xBC	; 188
+ 2ee:	90 e0       	ldi	r25, 0x00	; 0
+ 2f0:	25 ec       	ldi	r18, 0xC5	; 197
+ 2f2:	fc 01       	movw	r30, r24
+ 2f4:	20 83       	st	Z, r18
 			break;
- 2f8:	2b c0       	rjmp	.+86     	; 0x350 <__stack+0x51>
+ 2f6:	2b c0       	rjmp	.+86     	; 0x34e <__stack+0x4f>
 		case(0xA0): // STOP condition or repeated START condition 
 			TWCR = TWI_COMM_MASK; // Switch to the not addressed slave mode, but SLA will be recognized
- 2fa:	8c eb       	ldi	r24, 0xBC	; 188
- 2fc:	90 e0       	ldi	r25, 0x00	; 0
- 2fe:	25 ec       	ldi	r18, 0xC5	; 197
- 300:	fc 01       	movw	r30, r24
- 302:	20 83       	st	Z, r18
+ 2f8:	8c eb       	ldi	r24, 0xBC	; 188
+ 2fa:	90 e0       	ldi	r25, 0x00	; 0
+ 2fc:	25 ec       	ldi	r18, 0xC5	; 197
+ 2fe:	fc 01       	movw	r30, r24
+ 300:	20 83       	st	Z, r18
 			run_command = 1;
- 304:	81 e0       	ldi	r24, 0x01	; 1
- 306:	80 93 02 01 	sts	0x0102, r24
+ 302:	81 e0       	ldi	r24, 0x01	; 1
+ 304:	80 93 02 01 	sts	0x0102, r24
 			break;				
- 30a:	22 c0       	rjmp	.+68     	; 0x350 <__stack+0x51>
+ 308:	22 c0       	rjmp	.+68     	; 0x34e <__stack+0x4f>
 		// The following are commands received in STx mode
 		case(0xA8): // Own SLA+R has been received, ACK has been returned
 			if(motor_command[0] == TX)
- 30c:	80 91 05 01 	lds	r24, 0x0105
- 310:	84 30       	cpi	r24, 0x04	; 4
- 312:	e9 f4       	brne	.+58     	; 0x34e <__stack+0x4f>
+ 30a:	80 91 05 01 	lds	r24, 0x0105
+ 30e:	84 30       	cpi	r24, 0x04	; 4
+ 310:	e9 f4       	brne	.+58     	; 0x34c <__stack+0x4d>
 			{
 				TWDR = *(tx_num);
- 314:	8b eb       	ldi	r24, 0xBB	; 187
- 316:	90 e0       	ldi	r25, 0x00	; 0
- 318:	20 91 03 01 	lds	r18, 0x0103
- 31c:	30 91 04 01 	lds	r19, 0x0104
- 320:	f9 01       	movw	r30, r18
- 322:	20 81       	ld	r18, Z
- 324:	fc 01       	movw	r30, r24
- 326:	20 83       	st	Z, r18
+ 312:	8b eb       	ldi	r24, 0xBB	; 187
+ 314:	90 e0       	ldi	r25, 0x00	; 0
+ 316:	20 91 03 01 	lds	r18, 0x0103
+ 31a:	30 91 04 01 	lds	r19, 0x0104
+ 31e:	f9 01       	movw	r30, r18
+ 320:	20 81       	ld	r18, Z
+ 322:	fc 01       	movw	r30, r24
+ 324:	20 83       	st	Z, r18
 				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
- 328:	8c eb       	ldi	r24, 0xBC	; 188
- 32a:	90 e0       	ldi	r25, 0x00	; 0
- 32c:	25 e8       	ldi	r18, 0x85	; 133
- 32e:	fc 01       	movw	r30, r24
- 330:	20 83       	st	Z, r18
+ 326:	8c eb       	ldi	r24, 0xBC	; 188
+ 328:	90 e0       	ldi	r25, 0x00	; 0
+ 32a:	25 e8       	ldi	r18, 0x85	; 133
+ 32c:	fc 01       	movw	r30, r24
+ 32e:	20 83       	st	Z, r18
 			}
 			break;
- 332:	0e c0       	rjmp	.+28     	; 0x350 <__stack+0x51>
+ 330:	0e c0       	rjmp	.+28     	; 0x34e <__stack+0x4f>
 		case(0xB8):	// Data byte in TWDR has bee Txed, ACK received	
 			break;
 		case(0xC8):
 		case(0xC0): // Last data byte has been transmitted
 			TWDR = 0;
- 334:	8b eb       	ldi	r24, 0xBB	; 187
- 336:	90 e0       	ldi	r25, 0x00	; 0
- 338:	fc 01       	movw	r30, r24
- 33a:	10 82       	st	Z, r1
+ 332:	8b eb       	ldi	r24, 0xBB	; 187
+ 334:	90 e0       	ldi	r25, 0x00	; 0
+ 336:	fc 01       	movw	r30, r24
+ 338:	10 82       	st	Z, r1
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
- 33c:	8c eb       	ldi	r24, 0xBC	; 188
- 33e:	90 e0       	ldi	r25, 0x00	; 0
- 340:	25 ec       	ldi	r18, 0xC5	; 197
- 342:	fc 01       	movw	r30, r24
- 344:	20 83       	st	Z, r18
+ 33a:	8c eb       	ldi	r24, 0xBC	; 188
+ 33c:	90 e0       	ldi	r25, 0x00	; 0
+ 33e:	25 ec       	ldi	r18, 0xC5	; 197
+ 340:	fc 01       	movw	r30, r24
+ 342:	20 83       	st	Z, r18
 			break;
- 346:	00 00       	nop
- 348:	03 c0       	rjmp	.+6      	; 0x350 <__stack+0x51>
+ 344:	00 00       	nop
+ 346:	03 c0       	rjmp	.+6      	; 0x34e <__stack+0x4f>
 				TWDR = *(tx_num);
 				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
 			}
 			break;
 		case(0xB8):	// Data byte in TWDR has bee Txed, ACK received	
 			break;
- 34a:	00 00       	nop
- 34c:	01 c0       	rjmp	.+2      	; 0x350 <__stack+0x51>
+ 348:	00 00       	nop
+ 34a:	01 c0       	rjmp	.+2      	; 0x34e <__stack+0x4f>
 			if(motor_command[0] == TX)
 			{
 				TWDR = *(tx_num);
 				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
 			}
 			break;
- 34e:	00 00       	nop
+ 34c:	00 00       	nop
 			TWCR = TWI_COMM_MASK; // switched to non addressed slave mode, sla will be recog
 			break;
 		default: // Something unexpected happened
 			break;
 	}
- 350:	0f 90       	pop	r0
- 352:	cf 91       	pop	r28
- 354:	df 91       	pop	r29
- 356:	ff 91       	pop	r31
- 358:	ef 91       	pop	r30
- 35a:	9f 91       	pop	r25
- 35c:	8f 91       	pop	r24
- 35e:	3f 91       	pop	r19
- 360:	2f 91       	pop	r18
- 362:	0f 90       	pop	r0
- 364:	0f be       	out	0x3f, r0	; 63
- 366:	0f 90       	pop	r0
- 368:	1f 90       	pop	r1
- 36a:	18 95       	reti
+ 34e:	0f 90       	pop	r0
+ 350:	cf 91       	pop	r28
+ 352:	df 91       	pop	r29
+ 354:	ff 91       	pop	r31
+ 356:	ef 91       	pop	r30
+ 358:	9f 91       	pop	r25
+ 35a:	8f 91       	pop	r24
+ 35c:	3f 91       	pop	r19
+ 35e:	2f 91       	pop	r18
+ 360:	0f 90       	pop	r0
+ 362:	0f be       	out	0x3f, r0	; 63
+ 364:	0f 90       	pop	r0
+ 366:	1f 90       	pop	r1
+ 368:	18 95       	reti
 
-0000036c <_exit>:
- 36c:	f8 94       	cli
+0000036a <_exit>:
+ 36a:	f8 94       	cli
 
-0000036e <__stop_program>:
- 36e:	ff cf       	rjmp	.-2      	; 0x36e <__stop_program>
+0000036c <__stop_program>:
+ 36c:	ff cf       	rjmp	.-2      	; 0x36c <__stop_program>

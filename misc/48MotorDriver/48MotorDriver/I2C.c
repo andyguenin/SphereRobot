@@ -18,69 +18,13 @@ volatile char pointer = 0;
 volatile char test_send = 0;
 volatile char run_command = 0;
 
-volatile unsigned int* tx_num;
+volatile char* tx_num;
 
-/*
-int main(void)
-{
-	init_all();
-	init_i2c_slave_receiver(ADDRESS, 0, 1);
-	char a = 0xaa;
-	tx_var(&a);
-	sei();
-	while(1)
-	{
-		if(command_ready())
-		{
-			char* m_c = command();
-			switch(m_c[0])
-			{
-			case(CALIBRATE):
-				break;
-			case(IN):
-				DDRB |= (1<<6)|(1<<7);
-				if(m_c[1] == 2)
-				{
-					PORTB |= 1<<6;
-				}
-				else
-				{
-					PORTB |= 1<<7;
-				}				
-				break;
-			case(OUT):
-				break;
-			case(STOP):
-				DDRD |= (1<<6)|(1<<7);
-				if(m_c[1] == 4)
-				{
-					PORTD |= 1<<6;
-				}
-				else
-				{
-					PORTD |= 1<<7;
-				}	
-				break;
-			default:
-				break;
-			}			
-		}
-	}
-	
-	
-}
-*/
-void tx_var(volatile unsigned int* txv)
+void tx_var(char* txv)
 {
 	tx_num = txv;
 }
 
-
-void init_all()
-{
-	CLKPR = 1<<7;
-	CLKPR = 0;
-}
 
 char command_ready()
 {
@@ -95,7 +39,6 @@ char* command()
 
 void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned char respond_to_announce)
 {
-	run_command = 0;
 	motor_command[0] = 0;
 	motor_command[1] = 0;
 	TWAR = address << 1; // sets the slave address
@@ -106,6 +49,8 @@ void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned
 	TWAMR = mask << 1;
 	TWDR = 0xFF;
 	TWCR = TWI_COMM_MASK;
+	DDRD = 0xf;
+	sei();
 }
 
 ISR(TWI_vect)
@@ -138,16 +83,11 @@ ISR(TWI_vect)
 		case(0xA8): // Own SLA+R has been received, ACK has been returned
 			if(motor_command[0] == TX)
 			{
-				TWDR = (char)(*(tx_num));
-				TWCR = (TWI_COMM_MASK);
+				TWDR = *(tx_num);
+				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
 			}
 			break;
 		case(0xB8):	// Data byte in TWDR has bee Txed, ACK received	
-			if(motor_command[0] == TX)
-			{
-				TWDR = (char)((*(tx_num))>>8);
-				TWCR = (TWI_COMM_MASK & (~(1<<TWEA)));
-			}
 			break;
 		case(0xC8):
 		case(0xC0): // Last data byte has been transmitted

@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = 32u4finaltest.o 32U4IMU.o 
+OBJECTS = 32u4finaltest.o 32U4IMU.o m_usb.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -50,6 +50,9 @@ all: $(TARGET) 32u4finaltest.hex 32u4finaltest.eep 32u4finaltest.lss size
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 32U4IMU.o: ../32U4IMU.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+m_usb.o: ../m_usb.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

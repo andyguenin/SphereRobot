@@ -15,7 +15,8 @@
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/math.h
+  c:/winavr-20100110/lib/gcc/../../avr/include/math.h ../m_usb.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h
 
 ../m_general.h:
 
@@ -52,3 +53,7 @@ c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:
 c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/math.h:
+
+../m_usb.h:
+
+c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:

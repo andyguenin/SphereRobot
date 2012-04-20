@@ -27,12 +27,15 @@
 #include "i2c.h"
 #include <avr/wdt.h>
 
-#define ADDRESS 1
+#define ADDRESS 6
+#define SPEED 70
+#define EXTENT 1000
 
 void Set_Speed(unsigned char speed);
 void Set_Direction(unsigned char direction);
 void brake();
 void unbrake();
+char limit_switch();
 
 char current_direction = 0;
 
@@ -67,6 +70,10 @@ unsigned char drvPatternsCCW[] = {
   COM2P5_CCW  //Phase5
 };
 
+char limit_switch()
+{
+	return (PINB & (1<<7));
+}
 
 void turn_on()
 {
@@ -118,7 +125,7 @@ register unsigned char *pDrvPattern asm("r14");
 
 
 
-//! Used for optimized temporary varables.
+//! Used for optimized temporary variables.
 register union _fastTemp{
 	unsigned int word;
 	struct{
@@ -222,7 +229,7 @@ void unbrake()
  * Initialize the Timer 1 and timer 2 to run in phase and frequency correct
  * PWM mode (symmetric PWM). The base frequency is set to 32kHz (can be
  * reduced at the expense of lower resolution on the speed control). The
- * functions also ensures that the timers are counting in synch.
+ * functions also ensures that the timers are counting in sync.
  *
  *  \param void
  *
@@ -356,37 +363,103 @@ int main( void )
   
   
 	Set_Speed(0);
-	//brake();
+	brake();
 	
-  
+	
+	
+	char switching = 0;
+	char switch_direction = CLOCKWISE;
+	char speed = 0;
+	char in_command = 0;
+	while(1)
+	{
+		if(switching)
+		{
+			
+			Set_Direction(switch_direction);
+			Set_Speed(speed);
+			unbrake();
+			
+			if(in_command == CALIBRATE)
+			{
+				while(!limit_switch());
+				
+			}
+			else
+			{
+				if(in_command == IN)
+				{
+					while(!limit_switch() && !(count < 40));
+				}
+				else
+				{
+					if(in_command == OUT)
+					{
+						while(!limit_switch() && !(count > EXTENT - 10));
+					}
+				}
+			}
+			brake();
+			Set_Speed(0);				
+			switching = 0;
+		}
+		
+		if(command_ready())
+		{
+			char* m_c = command();
+			in_command = m_c[0];
+			switch(m_c[0])
+			{
+				case CALIBRATE:
+					speed = 50;
+					switch_direction = COUNTERCLOCKWISE;
+					break;
+				case IN:
+					speed = SPEED;
+					switch_direction = COUNTERCLOCKWISE;
+					break;
+				case OUT:
+					speed = SPEED;
+					switch_direction = CLOCKWISE;
+					break;
+					
+			}
+			switching = 1;
+		}
+	}
+	
+	/*
+	Set_Direction(COUNTERCLOCKWISE);
+	Set_Speed(155);
+	unbrake();
+	while(!limit_switch());
+	Set_Speed(0);
+	brake();
+	while(1);*/
+  /*
 	count = 0;
 	wdt_reset();
 	wdt_enable(WDTO_1S);
 	while(1)
 	{
-		wdt_reset();
+		
 		if(command_ready())
 		{
 			char* m_c = command();
 			switch(m_c[0])
 			{
-				case 0:
-					Set_Direction(COUNTERCLOCKWISE);
-					Set_Speed(150);
-				/*	unbrake();
-					Set_Direction(COUNTERCLOCKWISE);
-					Set_Speed(150);*/
+				case CALIBRATE:
+									
 					break;
-				case 1:
+				case IN:
 					Set_Direction(CLOCKWISE);
-					Set_Speed(150);
-					/*unbrake();
-					Set_Direction(CLOCKWISE);
-					Set_Speed(150);*/
+					Set_Speed(175);
+					unbrake();
+					
 					break;
-				case 2:
+				case OUT:
 					Set_Speed(0);
-				//	brake();
+					brake();
 					break;
 				default:
 					break;
@@ -395,8 +468,7 @@ int main( void )
 
 		}				
 	}
-	
-	/*
+
 	while(1) {
 		char* m_c = command();
 		switch(m_c[0])
@@ -432,7 +504,7 @@ int main( void )
 		}		
 	}
 
-  /*	
+ 	
     char enabled = 0;
   count = 0;
   brake();

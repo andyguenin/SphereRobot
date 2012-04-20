@@ -50,9 +50,9 @@
  * sensor_three_phase_BLDC.h file. \n
  * \n
  * The default configuration for hall sensor inputs are:
- *    - HALL1 = PB1
- *    - HALL2 = PB2
- *    - HALL3 = PB3
+ *    - HALL1 = PB0
+ *    - HALL2 = PB1
+ *    - HALL3 = PB2
  *
  * The default configuration for driver control signals are:
  *    - UL = PD6

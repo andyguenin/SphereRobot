@@ -47,10 +47,10 @@ void init_i2c_slave_receiver(unsigned char address, unsigned char mask, unsigned
 		TWAR |= 1;
 	}	
 	TWAMR = mask << 1;
-	TWDR = 0xFF;
+//	TWDR = 0xFF;
 	TWCR = TWI_COMM_MASK;
 	DDRD = 0xf;
-	sei();
+//	sei();
 }
 
 ISR(TWI_vect)

@@ -27,7 +27,7 @@
 #include "i2c.h"
 #include <avr/wdt.h>
 
-#define ADDRESS 6
+#define ADDRESS 2
 #define SPEED 70
 #define EXTENT 1000
 
@@ -159,6 +159,7 @@ unsigned int count = 0;
 //!
 ISR(PCINT0_vect)
 {
+ PORTD ^= 1;
 
   unsigned char *pTemp;
   fastTemp.word = (PIN_HALL & hallMask);  // Read Hall, Mask Pins, shift to use as pointer offset
@@ -173,14 +174,15 @@ ISR(PCINT0_vect)
 
   TCCR0A = *(pTemp + PATTERN_COM0_OFFSET);    // Reconfigure output compare operation for T0
   TCCR2A = *(pTemp + PATTERN_COM2_OFFSET); // Reconfigure output compare operation for T2
-  if(current_direction == COUNTERCLOCKWISE)
-  {
-	  count--;
-  }
-  else
-  {
-	  count++;
-  }
+ 
+ // if(current_direction == COUNTERCLOCKWISE)
+  //{
+//	  count--;
+ // }
+ // else
+  //{
+//	  count++;
+ // }
  
 }
 
@@ -243,7 +245,7 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR0B = (0<<FOC0A)|(0<<FOC0B)|
            (0<<WGM02)|                     // Fast PWM mode
-           (1<<CS02)|(0<<CS01)|(0<<CS00); // Prescaler = CLK/256
+           (1<<CS02)|(0<<CS01)|(1<<CS00); // Prescaler = CLK/1024
 
   //Timer Counter 2. OCRA and OCRB used for motor
   TCCR2A = (0<<COM2A1)|(0<<COM2A0)|        // OCRA not connected
@@ -251,20 +253,14 @@ static void Init_MC_timers( void )
            (1<<WGM01)|(1<<WGM00);         // Fast PWM mode
   TCCR2B = (0<<FOC2A)|(0<<FOC2B)|
            (0<<WGM22)|                     // Fast PWM mode
-           (1<<CS22)|(1<<CS21)|(0<<CS20); // Prescaler = CLK/256
-
-
-	// Timer one for braking
-	//TCCR1A = 0;
-	
-	
+           (1<<CS22)|(1<<CS21)|(1<<CS20); // Prescaler = CLK/1024
 	
   // Synchronize timers
   TCNT0 = 0;
   TCNT2 = 3;
 
   TIFR0 = TIFR0;    // Clear TC0 interrupt flags
-  TIFR1 = TIFR1;    // Clear TC2 interrupt flags
+  TIFR2 = TIFR2;    // Clear TC2 interrupt flags
 }
 
 
@@ -290,6 +286,7 @@ void Set_Speed(unsigned char speed)
   OCR0A = speed;        // Change the duty cycle
   OCR0B = speed;
   OCR2B = speed;
+  
   sei();
 }
 
@@ -342,14 +339,16 @@ int main( void )
 {
 
 	CLKPR = (1<<CLKPCE); 
-	CLKPR=0x00;
+	CLKPR=0x01;
+	DDRD |= 1;
+	PORTD |= 1;
 	MCUCR |= (1<<PUD);  // Disable all pull-ups
 	hallMask = HALL_MASK; // Initialize hallMask variable
 	//Set initial direction.
 	Set_Direction( CLOCKWISE );  
 	Init_MC_timers();
 	Init_MC_pin_change_interrupt();
-	init_i2c_slave_receiver(ADDRESS, 0, 1);
+	init_i2c_slave_receiver(ADDRESS, 0, 0); // open I2C channel, ?, do not respond to GA
 
 	DDR_HALL |= HALL_MASK;    //Lock HALL sensor by driving Hall lines
 	PORT_HALL |= HALL_MASK;
@@ -361,16 +360,14 @@ int main( void )
 
 	DDRB &= ~(1<<7); // limitswitch on input
   
-  
 	Set_Speed(0);
 	brake();
-	
-	
 	
 	char switching = 0;
 	char switch_direction = CLOCKWISE;
 	char speed = 0;
 	char in_command = 0;
+	PORTD &= ~1;
 	while(1)
 	{
 		if(switching)
@@ -382,7 +379,23 @@ int main( void )
 			
 			if(in_command == CALIBRATE)
 			{
-				while(!limit_switch());
+			//	PORTD |= 1;
+			unsigned char spd=0;
+			unsigned int counter=0;
+				while(!limit_switch()){
+					if(counter++>80)
+					{
+						counter = 0;
+						spd++;
+					//	PORTD ^= 1;
+					}
+					if(spd>20){
+						spd=20;
+					}
+					Set_Speed(spd);
+					
+				}
+			//	PORTD &= ~1;
 				
 			}
 			else
@@ -411,7 +424,7 @@ int main( void )
 			switch(m_c[0])
 			{
 				case CALIBRATE:
-					speed = 50;
+					speed = 0;
 					switch_direction = COUNTERCLOCKWISE;
 					break;
 				case IN:
